@@ -8,6 +8,33 @@
 #include "readcmd.h"
 
 
+void dup_out(char* fichier){
+	int file = open(fichier, O_WRONLY | O_CREAT | O_TRUNC);
+	if(file < 0) {
+		perror("Error : Output file\n");
+		exit(2);
+	}
+	if(dup2(file,1) < 0) {
+		perror("Error : Output Redirection error\n");
+		exit(2);
+	}
+	close(file);
+}
+
+void dup_in(char* fichier){
+	int file = open(fichier, O_RDONLY);
+	if(file < 0) {
+		perror("Error : No input file\n");
+		exit(2);
+	}
+	if(dup2(file,0) < 0) {
+		perror("Error : Input Redirection error\n");
+		exit(2);
+	}
+	close(file);
+}
+
+
 int main()
 {
 	while (1) {
@@ -18,14 +45,6 @@ int main()
 		
 		printf("shell> ");
 		l = readcmd();
-		
-		
-		// Pour pouvoir sortir du shell
-		/*
-		if(strcmp(l->seq[0][0],"exit") == 0)
-			exit(0);
-		
-		*/
 		
 		// On fork pour eviter les erreur.
 		pid = fork();
@@ -39,31 +58,30 @@ int main()
 				}
 				else {
 					if( l->out ) { // Si il y a redirection de fichier en sortie.
-						int file = open(l->out, O_WRONLY | O_CREAT);
-						if(file < 0) {
-							perror("Error : Output file\n");
-							exit(2);
-						}
-						if(dup2(file,1) < 0) {
-							perror("Error : Output Redirection error\n");
-							exit(2);
-						}
-						close(file);
+						dup_out(l->out);
 					}
 					if( l->in ) { // Si il y a redirection de fichier en entrée
-						int file = open(l->in, O_RDONLY);
-						if(file < 0) {
-							perror("Error : No input file\n");
-							exit(2);
-						}
-						if(dup2(file,0) < 0) {
-							perror("Error : Input Redirection error\n");
-							exit(2);
-						}
-						close(file);
+						dup_in(l->in);
 					}
 					
-					exec = execvp(l->seq[0][0],l->seq[0]);
+					// Le Pipe //
+					int p[2];
+					
+					for (i=0; l->seq[i]!=0; i++) {
+						printf(" commande %d : %s\n",i,l->seq[i][0]);
+						
+						pipe(p);
+						dup2(p[0],0);
+						close(p[0]);
+						
+						exec = execvp(l->seq[i][0],l->seq[i]);
+						
+						dup2(p[1],1);
+						close(p[1]);
+					} 
+					
+					
+					//exec = execvp(l->seq[0][0],l->seq[0]);
 				}
 				
 				if(exec == -1) {/* Si l'éxécution n'a pas marché on affiche l'erreur */
