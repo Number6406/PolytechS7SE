@@ -1,3 +1,5 @@
+package jus.poc.prodcons.v1;
+
 
 import com.sun.xml.internal.bind.api.Bridge;
 import com.sun.xml.internal.ws.api.message.Message;

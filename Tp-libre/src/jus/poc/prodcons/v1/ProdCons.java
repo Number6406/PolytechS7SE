@@ -1,3 +1,5 @@
+package jus.poc.prodcons.v1;
+
 
 import java.util.List;
 import jus.poc.prodcons.Message;

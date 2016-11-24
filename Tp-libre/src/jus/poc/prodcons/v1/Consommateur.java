@@ -1,3 +1,5 @@
+package jus.poc.prodcons.v1;
+
 
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons._Consommateur;

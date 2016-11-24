@@ -1,5 +1,8 @@
+package jus.poc.prodcons.v1;
 
-import jus.poc.prodcons.Simulateur;
+
+import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons._Producteur;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,10 +14,10 @@ import jus.poc.prodcons.Simulateur;
  *
  * @author bonhourg
  */
-public class TestProdCons extends Simulateur {
+public class Producteur extends Acteur implements _Producteur {
 
     @Override
-    protected void run() throws Exception {
+    public int nombreDeMessages() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
