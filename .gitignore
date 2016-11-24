@@ -1,3 +1,5 @@
+tst
+
 # Object files
 *.o
 *.ko
@@ -31,3 +33,4 @@
 # Debug files
 *.dSYM/
 *.su
+/Tp-libre/nbproject/private/
