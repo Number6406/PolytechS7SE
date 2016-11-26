@@ -2,3 +2,6 @@ nbproject/*
 Doc/*
 TP_PROD_CONS.pdf
 .netbeans
+/bin/
+.classpath
+.project
