@@ -111,6 +111,30 @@ void *mem_alloc(size_t size){
  */
 void mem_free(void *zone, size_t size){
 	// Trouver les deux zones adjacentes (pour chainer et fusionner si besoin)
+	struct fb *precedent, *suivant,*courant;
+	courant = *(struct fb**)mem_heap;
+	while(courant!=NULL && (void*)courant < zone) {
+		precedent = courant;
+		courant = courant->next;
+	}
+	if(precedent == NULL){ // Premier bloc
+		if(courant == NULL) {
+			printf("Erreur..\n");
+		} else {
+			suivant = courant->next;
+			if(zone + (*(struct bb*)zone).size == suivant){ //Fusionner
+				
+			} else { // Pas fusionner
+				struct fb p_bloc_libre;
+				p_bloc_libre.size = (*(struct bb*)zone).size;
+				p_bloc_libre.next = suivant;
+				*(struct fb**)mem_heap = zone;
+				*(struct fb*)zone = p_bloc_libre;
+			}
+			
+		}
+	}
+	
 }
 
 /**
