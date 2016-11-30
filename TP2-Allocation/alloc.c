@@ -122,33 +122,29 @@ void *mem_alloc(size_t size){
  */
 void mem_free(void *zone, size_t size){
 	// Trouver les deux zones adjacentes (pour chainer et fusionner si besoin)
-	struct fb *precedent, *suivant,*courant;
+	struct fb *precedent,*courant;
+	struct fb p_bloc_libre;
+	
 	precedent = NULL;
 	courant = *(struct fb**)mem_heap;
+	
 	while(courant!=NULL && (void*)courant < zone) {
 		precedent = courant;
 		courant = courant->next;
 	}
 	
 	if(courant == NULL) {
-		printf("Erreur..\n");
+		printf("fin du tableau..\n");
+		p_bloc_libre.size = (*(struct bb*)zone).size;
+		p_bloc_libre.next = NULL;
 	} else {
-		
-		suivant = courant->next;
-		struct fb p_bloc_libre;
-		
-		if(zone + (*(struct bb*)zone).size == suivant){ //Fusionner
-			if(suivant == NULL){ // bloc final
-				p_bloc_libre.size = (*(struct bb*)zone).size;
-				p_bloc_libre.next = NULL;
-			} else { // Pas bloc final
-				p_bloc_libre.size = (*(struct bb*)zone).size + suivant->size;
-				p_bloc_libre.next = suivant->next;
-			}
+		if(zone + (*(struct bb*)zone).size == courant){ //Fusionner
+			p_bloc_libre.size = (*(struct bb*)zone).size + courant->size;
+			p_bloc_libre.next = courant->next;
 		} 
 		else { // Pas fusionner
 			p_bloc_libre.size = (*(struct bb*)zone).size;
-			p_bloc_libre.next = suivant;
+			p_bloc_libre.next = courant;
 		}
 		
 		if(precedent == NULL){ // Premier bloc
