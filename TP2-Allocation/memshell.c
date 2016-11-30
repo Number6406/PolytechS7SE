@@ -156,7 +156,7 @@ void help()
 	
 	printf("\nRemarques :\n");
 	printf("1) Au lancement, le shell appelle mem_init\n");
-	printf("2) Le shell supporte jusqu'à %d allocations entre deux initialisations\n", NB_MAX_ALLOC);			
+	printf("2) Le shell supporte jusqu'a %d allocations entre deux initialisations\n", NB_MAX_ALLOC);			
 }
 
  
@@ -398,14 +398,14 @@ int main() {
 			
 			case INIT:
 				
-				printf("Réinitialisation de la mémoire (%d octets)...", HEAP_SIZE);
+				printf("Reinitialisation de la mémoire (%d octets)...", HEAP_SIZE);
 				mem_init();
 				printf("OK\n");			
 				break;
 			
 			case SHOW:
 			
-				printf("Mémoire initialement disponible : %d octets\n", HEAP_SIZE);
+				printf("Memoire initialement disponible : %d octets\n", HEAP_SIZE);
 				mem_show(&mem_print);
 				break;
 
