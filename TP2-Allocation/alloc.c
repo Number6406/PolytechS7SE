@@ -55,10 +55,11 @@ void mem_init(){
 	char* adr_bloc_plein_suivant = (char*)courant + courant->size;
 	size_t espace_restant = (size_t) adr_bloc_plein_suivant - ((size_t)courant + p_bloc_plein.size);
 	
-	if(espace_restant < sizeof(struct fb)){
-		p_bloc_plein.size = courant->size;
+	if(espace_restant < sizeof(struct fb)){ // Si l'espace restant est plus petit que la structure fb on alloue tout
+		p_bloc_plein.size = courant->size; // Taille de la zone libre
 		precedent->next = courant->next;
-	} else {		
+	} else {
+		p_bloc_plein.size = size + sizeof(struct bb);		
 		//Rebrancher
 		struct fb p_bloc_vide; // Nouveau bloc crée
 		char* adr_bloc_vide_suivant = (char*)courant + p_bloc_plein.size;
@@ -77,7 +78,7 @@ void mem_init(){
 		
 		*(struct fb*)adr_bloc_vide_suivant = p_bloc_vide;
 	}
-	
+	//printf("TAILLE QUE L'ON ALLOUE : %ld\n EN 0x%lX\n",p_bloc_plein.size,(unsigned long)zone);
 	*(struct bb*)zone = p_bloc_plein;	
  }
 
@@ -95,6 +96,8 @@ void *mem_alloc(size_t size){
 	precedent = NULL;
 	courant = *debut; // Première zone libre
 	
+	//printf("mem_heap 0x%lx \n",(unsigned long)mem_heap);
+	//printf("premiere zone libre 0x%lx [%ld]\n",(unsigned long)courant,courant->size);
 	// Tant que la zone n'est pas assez grande avancer
 	while(courant != NULL && courant->size < size){ 
 		precedent = courant;
@@ -107,7 +110,7 @@ void *mem_alloc(size_t size){
 	} else {
 		char* zone = (char*)courant; // Le début de la zone
 		allouer(size,zone,courant,precedent);
-		return zone + sizeof(struct bb);	
+		return zone;	
 	}
 }
 
@@ -136,7 +139,7 @@ void mem_free(void *zone, size_t size){
 		
 		if(zone + (*(struct bb*)zone).size == suivant){ //Fusionner
 			if(suivant == NULL){ // bloc final
-				p_bloc_libre.size = (*(struct bb*)zone).size + suivant->size;
+				p_bloc_libre.size = (*(struct bb*)zone).size;
 				p_bloc_libre.next = NULL;
 			} else { // Pas bloc final
 				p_bloc_libre.size = (*(struct bb*)zone).size + suivant->size;
@@ -188,4 +191,7 @@ void mem_show(void (*print)(void *zone, size_t size)){
 	}
 }
 
-
+void mem_used_show(void* zone){
+	struct bb debut = *((struct bb*)(zone));
+	printf("En 0x%lX\nTaille dans la memoire : %ld\n",(unsigned long)zone,debut.size);
+}

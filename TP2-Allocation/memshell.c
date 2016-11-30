@@ -130,8 +130,11 @@ void used()
 				bloc_info_table[i].id,
 				(unsigned long)(bloc_info_table[i].address - (void*)mem_heap),
 				(unsigned long)bloc_info_table[i].size);
+			mem_used_show(bloc_info_table[i].address);
 		}
 	}
+	
+	
 	
 }
 

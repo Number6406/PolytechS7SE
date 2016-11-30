@@ -12,5 +12,6 @@ void mem_init();
 void *mem_alloc(size_t size);
 void mem_free(void *zone, size_t size);
 void mem_show(void (*print)(void *zone, size_t size));
+void mem_used_show(void* zone);
 
 #endif
