@@ -137,8 +137,7 @@ void mem_free(void *zone, size_t size){
 		courant = courant->next;
 	}
 	
-	if(courant == NULL) {
-		printf("fin du tableau..\n");
+	if(courant == NULL) { // Dernier bloc
 		p_bloc_libre.size = (*(struct bb*)zone).size;
 		p_bloc_libre.next = NULL;
 	} else {
@@ -150,20 +149,20 @@ void mem_free(void *zone, size_t size){
 			p_bloc_libre.size = (*(struct bb*)zone).size;
 			p_bloc_libre.next = courant;
 		}
-		
-		if(precedent == NULL){ // Premier bloc
-			*(struct fb**)mem_heap = zone;
-		} else {
-			if((char*)precedent + (precedent->size) == zone) { // Fusionner avec le précédent (Attention au format du pointeur ici)
-				precedent->size = precedent->size + p_bloc_libre.size;
-				precedent->next = p_bloc_libre.next;
-			} else { // Ne pas fusionner
-				precedent->next = zone;
-			}
+	}	
+	
+	if(precedent == NULL){ // Premier bloc
+		*(struct fb**)mem_heap = zone;
+	} else {
+		if((char*)precedent + (precedent->size) == zone) { // Fusionner avec le précédent (Attention au format du pointeur ici)
+			precedent->size = precedent->size + p_bloc_libre.size;
+			precedent->next = p_bloc_libre.next;
+		} else { // Ne pas fusionner
+			precedent->next = zone;
 		}
-		*(struct fb*)zone = p_bloc_libre;
-		
 	}
+	*(struct fb*)zone = p_bloc_libre;
+		
 	
 }
 
