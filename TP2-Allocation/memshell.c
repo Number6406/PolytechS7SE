@@ -113,7 +113,8 @@ Fonctions
  */
 void mem_print(void *zone, size_t size)
 {
-	printf("0x%lX 0x%lX\n", (unsigned long)(zone - (void*)mem_heap), (unsigned long)size);
+	printf("0x%lX 0x%lX", (unsigned long)(zone - (void*)mem_heap), (unsigned long)size);
+	printf(" (OU) %ld %ld\n", (unsigned long)(zone - (void*)mem_heap), (unsigned long)size);
 }
 
 /*
