@@ -119,9 +119,13 @@ void mem_print(void *zone, size_t size)
 
 void mem_print_perso(void *zone, size_t size)
 {
-  printf("0x%08lX  ------------\n", (unsigned long)(zone - (void*)mem_heap));
-  printf("            | %08ld |\n", (unsigned long)size);
-  printf("0x%08lX  ------------\n", (unsigned long)(zone - (void*)mem_heap)+(unsigned long)size);
+  printf("0x%08lX  ------------ %04ld\n",
+    (unsigned long)(zone - (void*)mem_heap),
+    (unsigned long)(zone - (void*)mem_heap));
+  printf("            | %8ld |\n", (unsigned long)size);
+  printf("0x%08lX  ------------ %04ld\n",
+    (unsigned long)(zone - (void*)mem_heap)+(unsigned long)size,
+    (unsigned long)(zone - (void*)mem_heap)+(unsigned long)size);
 }
 
 /*
@@ -150,9 +154,14 @@ void used_perso()
 
 	for(i=0; i<NB_MAX_ALLOC; i++) {
 		if ((bloc_info_table[i]).id != 0) {
-      printf("0x%08lX  ------------\n", (unsigned long)(bloc_info_table[i].address - (void*)mem_heap));
-      printf("%03ld         | %08ld |\n", bloc_info_table[i].id, (unsigned long)bloc_info_table[i].size);
-      printf("0x%08lX  ------------\n", (unsigned long)bloc_info_table[i].size);
+      printf("0x%08lX  ------------ %04ld\n",
+        (unsigned long)(bloc_info_table[i].address - (void*)mem_heap),
+        (unsigned long)(bloc_info_table[i].address - (void*)mem_heap));
+      printf("%3ld         | %8ld |\n", bloc_info_table[i].id, (unsigned long)bloc_info_table[i].size);
+      printf("0x%08lX  ------------ %04ld\n",
+        (unsigned long)(bloc_info_table[i].address - (void*)mem_heap) + (unsigned long)bloc_info_table[i].size,
+        (unsigned long)(bloc_info_table[i].address - (void*)mem_heap) + (unsigned long)bloc_info_table[i].size);
+      mem_used_show(bloc_info_table[i].address);
 		}
 	}
 }
