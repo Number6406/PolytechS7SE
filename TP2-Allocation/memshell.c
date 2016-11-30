@@ -142,15 +142,15 @@ void used()
 void help()
 {
 	printf("Commandes disponibles :\n");
-	printf("1) init : initialisation ou réinitialisation de l'allocateur\n");
-	printf("2) alloc <taille> : allocation d'un bloc mémoire\n");
-	printf("\tLa taille peut être en décimal ou en héxadécimal (préfixe 0x)\n");
-	printf("\tretour : identificateur de bloc et adresse de départ de la zone\n");
-	printf("3) free <identificateur> : libération d'un bloc\n");
+	printf("1) init : initialisation ou reinitialisation de l'allocateur\n");
+	printf("2) alloc <taille> : allocation d'un bloc memoire\n");
+	printf("\tLa taille peut etre en décimal ou en hexadecimal (prefixe 0x)\n");
+	printf("\tretour : identificateur de bloc et adresse de depart de la zone\n");
+	printf("3) free <identificateur> : liberation d'un bloc\n");
 	printf("4) show : affichage la liste des blocs libres restants\n");	
 	printf("\tsous la forme {adresse de départ, taille}\n");
-	printf("5) used : affichage de la liste des blocs occupés\n");
-	printf("\tsous la forme {identificateur, adresse de départ, taille}\n");		
+	printf("5) used : affichage de la liste des blocs occupes\n");
+	printf("\tsous la forme {identificateur, adresse de depart, taille}\n");		
 	printf("6) help : affichage de ce manuel\n");
 	printf("7) exit : quitter le shell\n");
 	
@@ -168,13 +168,13 @@ void init()
 
 	int i;
  
-	printf("**** Mini-shell de test pour l'allocateur mémoire ****\n");
+	printf("**** Mini-shell de test pour l'allocateur memoire ****\n");
 	printf("\tTapez help pour la liste des commandes\n");
 	
 	id_count = 1;
 	
 	/* initialisation de la memoire */
-	printf("Initialisation de la mémoire (%d octets)...", HEAP_SIZE);
+	printf("Initialisation de la memoire (%d octets)...", HEAP_SIZE);
 	mem_init();
 	printf("OK\n");
 	
@@ -418,7 +418,7 @@ int main() {
 				res = mem_alloc(args.size);
 				/* si une erreur a lieu, on affiche 0 */
 				if (res == NULL) {
-					printf("Erreur : échec de l'allocation (fonction mem_alloc, retour=NULL)\n");
+					printf("Erreur : echec de l'allocation (fonction mem_alloc, retour=NULL)\n");
 				} else {
 					id = get_id(res, args.size);
 					if (id == 0) {

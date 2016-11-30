@@ -1,3 +1,11 @@
+/**
+ * TP2 - Allocation mémoire
+ * Abonnenc Alicia
+ * Bonhoure Gilles
+ * RICM4
+ */
+
+
 #include <stdio.h>
 #include <stddef.h>
 #include "alloc.h"
@@ -14,7 +22,7 @@ struct bb {
 	size_t size;
 };
 
-//char mem_heap[HEAP_SIZE];
+//char mem_heap[HEAP_SIZE]; est dans le .h déjà
 
 
 /** 
