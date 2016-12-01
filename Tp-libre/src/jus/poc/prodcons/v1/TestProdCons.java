@@ -1,6 +1,7 @@
 package jus.poc.prodcons.v1;
 
 
+import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
 
 /*
@@ -14,6 +15,10 @@ import jus.poc.prodcons.Simulateur;
  * @author bonhourg
  */
 public class TestProdCons extends Simulateur {
+
+    public TestProdCons(Observateur observateur) {
+        super(observateur);
+    }
 
     @Override
     protected void run() throws Exception {

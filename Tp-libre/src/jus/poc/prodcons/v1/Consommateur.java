@@ -16,9 +16,11 @@ import jus.poc.prodcons._Consommateur;
  */
 public class Consommateur extends Acteur implements _Consommateur {
 
+    private ProdCons tampon;
+    
     @Override
     public int nombreDeMessages() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
     
 }

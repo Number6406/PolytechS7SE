@@ -18,9 +18,6 @@ import jus.poc.prodcons._Producteur;
  * @author bonhourg
  */
 public class ProdCons implements Tampon {
-    
-    List<Producteur> producteurs;
-    List<Consommateur> consommateurs;
 
     @Override
     public void put(_Producteur _, Message msg) throws Exception, InterruptedException {

@@ -15,6 +15,8 @@ import jus.poc.prodcons._Producteur;
  * @author bonhourg
  */
 public class Producteur extends Acteur implements _Producteur {
+    
+    private ProdCons tampon;
 
     @Override
     public int nombreDeMessages() {
