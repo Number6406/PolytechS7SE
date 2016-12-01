@@ -57,7 +57,11 @@ void mem_init(){
 	
 	if(espace_restant < sizeof(struct fb)){ // Si l'espace restant est plus petit que la structure fb on alloue tout
 		p_bloc_plein.size = courant->size; // Taille de la zone libre
-		precedent->next = courant->next;
+		if(precedent == NULL){ // Si c'est le premier bloc libre
+			*(struct fb**)mem_heap = courant->next;
+		} else {
+			precedent->next = courant->next;
+		}
 	} else {
 		p_bloc_plein.size = size + sizeof(struct bb);		
 		//Rebrancher
@@ -99,7 +103,7 @@ void *mem_alloc(size_t size){
 	//printf("mem_heap 0x%lx \n",(unsigned long)mem_heap);
 	//printf("premiere zone libre 0x%lx [%ld]\n",(unsigned long)courant,courant->size);
 	// Tant que la zone n'est pas assez grande avancer
-	while(courant != NULL && courant->size < size){ 
+	while(courant != NULL && (courant->size - sizeof(struct bb)) < size){ 
 		precedent = courant;
 		courant = courant->next; 
 	}
@@ -133,28 +137,32 @@ void mem_free(void *zone, size_t size){
 		courant = courant->next;
 	}
 	
-	if(courant == NULL) {
-		printf("fin du tableau..\n");
+	if(courant == NULL) { // Dernier bloc
 		p_bloc_libre.size = (*(struct bb*)zone).size;
 		p_bloc_libre.next = NULL;
 	} else {
-		if(zone + (*(struct bb*)zone).size == courant){ //Fusionner
+		if(zone + (*(struct bb*)zone).size == courant){ //Fusionner avec le suivant
 			p_bloc_libre.size = (*(struct bb*)zone).size + courant->size;
 			p_bloc_libre.next = courant->next;
 		} 
-		else { // Pas fusionner
+		else { // Pas fusionner avec le suivant
 			p_bloc_libre.size = (*(struct bb*)zone).size;
 			p_bloc_libre.next = courant;
 		}
-		
-		if(precedent == NULL){ // Premier bloc
-			*(struct fb**)mem_heap = zone;
-		} else {
+	}	
+	
+	if(precedent == NULL){ // Premier bloc
+		*(struct fb**)mem_heap = zone;
+	} else {
+		if((char*)precedent + (precedent->size) == zone) { // Fusionner avec le précédent (Attention au format du pointeur ici)
+			precedent->size = precedent->size + p_bloc_libre.size;
+			precedent->next = p_bloc_libre.next;
+		} else { // Ne pas fusionner
 			precedent->next = zone;
 		}
-		*(struct fb*)zone = p_bloc_libre;
-		
 	}
+	*(struct fb*)zone = p_bloc_libre;
+		
 	
 }
 
@@ -187,7 +195,7 @@ void mem_show(void (*print)(void *zone, size_t size)){
 	}
 }
 
-void mem_used_show(void* zone){
+unsigned long zone_size(void* zone){
 	struct bb debut = *((struct bb*)(zone));
-	printf("En 0x%lX\nTaille dans la memoire : %ld\n",(unsigned long)zone,debut.size);
+	return (unsigned long)debut.size;
 }
