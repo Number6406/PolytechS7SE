@@ -1,7 +1,5 @@
 package jus.poc.prodcons.v1;
 
-
-import java.util.List;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -18,25 +16,55 @@ import jus.poc.prodcons._Producteur;
  * @author bonhourg
  */
 public class ProdCons implements Tampon {
-
+    
+    private Message[] tampon;
+    private int tete_production;
+    private int tete_consommation;
+    private int nb_messages_tampon;
+    private int nb_prod;
+    private int nb_conso;
+    
+    public ProdCons(int taille_tampon) {
+        tampon = new Message[taille_tampon];
+        tete_production = 0;
+        tete_consommation = 0;
+    }
+    
     @Override
     public void put(_Producteur _, Message msg) throws Exception, InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        debutProduction(_);
+        //ajout dans le buffer
+        finProduction();
+    }
+    
+    public void ajoutTampon(Message msg) {
+        //TODO
+    }
+    
+    synchronized public void debutProduction(_Producteur p) throws InterruptedException {
+        while(nb_prod != 0 || nb_messages_tampon == taille()) {
+            p.wait();
+        }
+        nb_prod++;
+    }
+    
+    synchronized public void finProduction() {
+        nb_prod--;
+        nb_messages_tampon++;
+        notifyAll();
     }
 
     @Override
     public Message get(_Consommateur _) throws Exception, InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public int enAttente() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public int taille() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.tampon.length;
     }
     
 }
