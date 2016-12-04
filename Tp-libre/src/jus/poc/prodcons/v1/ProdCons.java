@@ -35,9 +35,10 @@ public class ProdCons implements Tampon {
     
     @Override
     public void put(_Producteur _, Message msg) throws Exception, InterruptedException {
-        debutProduction(_);
+        //debutProduction();
+        System.out.println(msg.toString());
         //ajout dans le buffer
-        finProduction();
+        //finProduction();
     }
     
     public void ajoutTampon(Message msg) {
@@ -49,9 +50,9 @@ public class ProdCons implements Tampon {
         nb_messages_tampon++;
     }
     
-    synchronized public void debutProduction(_Producteur p) throws InterruptedException {
+    public synchronized void debutProduction() throws InterruptedException {
         while(nb_prod != 0 || nb_messages_tampon == taille()) {
-            p.wait();
+            wait();
         }
         nb_prod++;
     }
@@ -92,6 +93,20 @@ public class ProdCons implements Tampon {
         nb_messages_tampon--;
         notifyAll();
     }
+    
+    public synchronized void debutConsommation() throws InterruptedException{
+        while(nb_messages_tampon <= 0 || nb_conso >= 0){
+            wait();
+        }
+        nb_conso++;
+    }
+    
+    public synchronized void finConsommation(){
+        nb_conso--;
+        nb_messages_tampon--;
+        notifyAll();
+    }
+    
 
     @Override
     public int enAttente() {
