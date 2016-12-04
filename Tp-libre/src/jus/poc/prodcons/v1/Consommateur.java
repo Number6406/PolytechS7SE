@@ -1,6 +1,8 @@
 package jus.poc.prodcons.v1;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -30,11 +32,10 @@ public class Consommateur extends Acteur implements _Consommateur {
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, moyenneTempsDeTraitement, deviationTempsDeTraitement);
         this.nb_messages = 0;
         
-        observateur.newConsommateur(this);
+        //observateur.newConsommateur(this);
     }
     
     public void ReadC() throws InterruptedException, Exception {
-        messages.next();
         tampon.get(this);
         nb_messages++;
         wait(tpsTraitement[nb_messages]);
@@ -47,6 +48,11 @@ public class Consommateur extends Acteur implements _Consommateur {
 
     public void run() {
         // comment savoir quand stopper le programme ?
+        try {
+            ReadC();
+        } catch (Exception ex) {
+            Logger.getLogger(Consommateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override

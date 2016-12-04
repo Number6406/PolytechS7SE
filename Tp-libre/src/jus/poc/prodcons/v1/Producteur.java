@@ -33,7 +33,7 @@ public class Producteur extends Acteur implements _Producteur {
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, tempsMoyenProduction, deviationTempsMoyenProduction);
         this.messages = new MessageX(this);
         
-        observateur.newProducteur(this);
+        //observateur.newProducteur(this);
     }
     
     synchronized public void writeP() throws InterruptedException, Exception{
