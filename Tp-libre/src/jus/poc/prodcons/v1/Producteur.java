@@ -1,6 +1,8 @@
 package jus.poc.prodcons.v1;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons._Producteur;
 import jus.poc.prodcons.Aleatoire;
@@ -30,6 +32,8 @@ public class Producteur extends Acteur implements _Producteur {
         nb_messages = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreMoyenDeProduction);
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, tempsMoyenProduction, deviationTempsMoyenProduction);
         this.messages = new MessageX(this);
+        
+        observateur.newProducteur(this);
     }
     
     synchronized public void writeP() throws InterruptedException, Exception{
@@ -37,6 +41,17 @@ public class Producteur extends Acteur implements _Producteur {
         nb_messages--;
         messages.next();
         tampon.put(this, messages);
+    }
+    
+    public void run() {
+        // Production de tous les messages
+        while(nombreDeMessages() > 0) {
+            try {
+                writeP();
+            } catch (Exception ex) {
+                Logger.getLogger(Producteur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override

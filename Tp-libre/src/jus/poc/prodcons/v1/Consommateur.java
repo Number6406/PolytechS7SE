@@ -29,13 +29,24 @@ public class Consommateur extends Acteur implements _Consommateur {
         this.tampon = tampon;
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, moyenneTempsDeTraitement, deviationTempsDeTraitement);
         this.nb_messages = 0;
+        
+        observateur.newConsommateur(this);
     }
     
-    public void ReadC() throws InterruptedException {
+    public void ReadC() throws InterruptedException, Exception {
         messages.next();
         tampon.get(this);
         nb_messages++;
         wait(tpsTraitement[nb_messages]);
+        traitement();
+    }
+
+    public void traitement() {
+        System.out.println("Traitement du " + nombreDeMessages() + "è message : " + messages.getMessage());
+    }
+
+    public void run() {
+        // comment savoir quand stopper le programme ?
     }
     
     @Override

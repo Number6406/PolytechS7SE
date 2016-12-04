@@ -28,6 +28,9 @@ public class ProdCons implements Tampon {
         tampon = new Message[taille_tampon];
         tete_production = 0;
         tete_consommation = 0;
+        nb_prod = 0;
+        nb_conso = 0;
+        nb_messages_tampon = 0;
     }
     
     @Override
