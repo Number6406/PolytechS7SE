@@ -30,7 +30,7 @@ public class Producteur extends Acteur implements _Producteur {
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, tempsMoyenProduction, deviationTempsMoyenProduction);
     }
     
-    synchronized public void writeP() throws InterruptedException{
+    synchronized public void writeP() throws InterruptedException, Exception{
         wait(tpsTraitement[nb_messages]);
         nb_messages--;
         tampon.put(this, new MessageX());
