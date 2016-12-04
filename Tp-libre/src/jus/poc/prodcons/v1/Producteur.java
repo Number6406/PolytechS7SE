@@ -58,7 +58,7 @@ public class Producteur extends Acteur implements _Producteur {
         // Production de tous les messages
         while(nombreDeMessages() > 0) {
             try {
-                writeP();
+                produire();
             } catch (Exception ex) {
                 Logger.getLogger(Producteur.class.getName()).log(Level.SEVERE, null, ex);
             }

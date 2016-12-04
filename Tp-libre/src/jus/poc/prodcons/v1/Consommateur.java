@@ -35,7 +35,7 @@ public class Consommateur extends Acteur implements _Consommateur {
         //observateur.newConsommateur(this);
     }
     
-    public void ReadC() throws InterruptedException, Exception {
+    public void consommer() throws InterruptedException, Exception {
         tampon.get(this);
         nb_messages++;
         wait(tpsTraitement[nb_messages]);
@@ -43,13 +43,13 @@ public class Consommateur extends Acteur implements _Consommateur {
     }
 
     public void traitement() {
-        System.out.println("Traitement du " + nombreDeMessages() + "è message : " + messages.getMessage());
+        System.out.println("Traitement du " + nombreDeMessages() + "è message : " + messages.toString());
     }
 
     public void run() {
         // comment savoir quand stopper le programme ?
         try {
-            ReadC();
+            consommer();
         } catch (Exception ex) {
             Logger.getLogger(Consommateur.class.getName()).log(Level.SEVERE, null, ex);
         }
