@@ -32,11 +32,22 @@ public class Producteur extends Acteur implements _Producteur {
         this.messages = new MessageX(this);
     }
     
-    synchronized public void writeP() throws InterruptedException, Exception{
+    public synchronized void produire() throws InterruptedException{
         wait(tpsTraitement[nb_messages]);
         nb_messages--;
         messages.next();
+    }
+    
+    /**
+     *
+     * @throws InterruptedException
+     * @throws Exception
+     */
+    public void deposer() throws InterruptedException, Exception{
+        produire();
+        tampon.debutProduction();
         tampon.put(this, messages);
+        tampon.finProduction();
     }
 
     @Override

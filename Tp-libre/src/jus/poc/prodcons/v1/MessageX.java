@@ -24,7 +24,8 @@ public class MessageX implements Message {
         numero = 0;
     }
     
-    public String getMessage(){
+    @Override
+    public String toString(){
         return message + numero;
     }
     
