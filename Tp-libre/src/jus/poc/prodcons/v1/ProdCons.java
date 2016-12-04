@@ -38,7 +38,12 @@ public class ProdCons implements Tampon {
     }
     
     public void ajoutTampon(Message msg) {
-        //TODO
+        if(tete_production == tampon.length) {
+            tete_production = 0;
+        }
+        tampon[tete_consommation] = msg;
+        tete_production++;
+        nb_messages_tampon++;
     }
     
     synchronized public void debutProduction(_Producteur p) throws InterruptedException {
@@ -56,10 +61,38 @@ public class ProdCons implements Tampon {
 
     @Override
     public Message get(_Consommateur _) throws Exception, InterruptedException {
+        debutConsommation(_);
+        Message m = retireTampon();
+        finConsommation();
+        return m;
+    }
+    
+    public Message retireTampon() {
+        if(tete_consommation == tampon.length) {
+            tete_consommation = 0;
+        }
+        Message m = tampon[tete_consommation];
+        tete_consommation++;
+        nb_messages_tampon--;
+        return m;
+    }
+    
+    public void debutConsommation(_Consommateur c) throws InterruptedException {
+        while(nb_conso != 0 || nb_messages_tampon != 0) {
+            c.wait();
+        }
+        nb_conso++;
+    }
+    
+    public void finConsommation() {
+        nb_conso--;
+        nb_messages_tampon--;
+        notifyAll();
     }
 
     @Override
     public int enAttente() {
+        return taille() - nb_messages_tampon;
     }
 
     @Override
