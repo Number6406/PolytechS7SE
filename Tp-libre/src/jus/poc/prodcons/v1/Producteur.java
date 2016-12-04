@@ -22,18 +22,21 @@ public class Producteur extends Acteur implements _Producteur {
     private final ProdCons tampon;
     private int nb_messages;
     private final int[] tpsTraitement;
+    private MessageX messages;
     
     public Producteur(ProdCons tampon,Observateur obs, int nombreMoyenDeProduction, int deviationNombreMoyenDeProduction, int tempsMoyenProduction, int deviationTempsMoyenProduction) throws ControlException{
         super(Acteur.typeProducteur,obs,tempsMoyenProduction,deviationTempsMoyenProduction);
         this.tampon = tampon;
         nb_messages = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreMoyenDeProduction);
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, tempsMoyenProduction, deviationTempsMoyenProduction);
+        this.messages = new MessageX(this);
     }
     
     synchronized public void writeP() throws InterruptedException, Exception{
         wait(tpsTraitement[nb_messages]);
         nb_messages--;
-        tampon.put(this, new MessageX());
+        messages.next();
+        tampon.put(this, messages);
     }
 
     @Override
