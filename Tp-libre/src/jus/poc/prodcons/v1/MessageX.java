@@ -32,7 +32,5 @@ public class MessageX implements Message {
     public void next(){
         numero++;
     }
-    
-    
 
 }
