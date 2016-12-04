@@ -34,3 +34,4 @@ tst
 *.dSYM/
 *.su
 /Tp-libre/nbproject/private/
+/Tp-libre/build/
