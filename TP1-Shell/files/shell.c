@@ -31,11 +31,11 @@ void dup_in(char* fichier){
 		perror("Error : No input file\n");
 		exit(2);
 	}
-	if(dup2(0,file) < 0) {
+	close(STDIN_FILENO);
+	if(dup(file) < 0) {
 		perror("Error : Input Redirection error\n");
 		exit(2);
 	}
-	close(0);
 }
 
 
@@ -45,7 +45,6 @@ int main() {
 		int i = 0;
 		int pid, fpid;
 		int exec = 0;
-		int p[2];
 
 		printf("shell> ");
 		l = readcmd();
@@ -74,38 +73,86 @@ int main() {
 					dup_in(l->in);
 				}
 				
-				// Le Pipe //
-				int res_pipe = pipe(p);
-				if(res_pipe < 0) {
-					printf("Erreur à la création du pipe %d.\n", i+1);
+				
+				int p[2];
+				
+				if(pipe(p)==-1){
+					perror("Pipe not working\n");
 					exit(1);
 				}
-
-
-				for (i=0; l->seq[i]!=0; i++) {
-					fpid = fork();
-					if(fpid == 0) {
-						close(p[1]);
-						dup2(p[1], STDOUT_FILENO);
-						close(p[0]);
-						printf(" commande %d : %s\n",i,l->seq[i][0]);
-						exec = execvp(l->seq[i][0],l->seq[i]);
-						printf("exécution :)\n");
-
-						if(exec == -1) {/* Si l'éxécution n'a pas marché on affiche l'erreur */
-							perror("Error ");
-							exit(1);
-						}
-
-					} else {
-						close(p[0]);
-						dup2(p[0], STDIN_FILENO);
-						printf("Je suis le père de %d\n", fpid);
-					}
-					wait(0);
-					printf("Terminaison de %d\n==========================================\n", fpid);
-
+				
+				if(fork() == 0)            //first fork
+				{
+					close(STDOUT_FILENO);  //closing stdout
+					dup(p[1]);         //replacing stdout with pipe write
+					close(p[0]);       //closing pipe read
+					close(p[1]);
+					
+					execvp(l->seq[0][0], l->seq[0]);
+					perror("execvp 1 failed");
+					exit(1);
 				}
+				
+				//~ for(i=1; l->seq[i] != NULL; i++){
+					
+					//~ int p2[2];
+					
+					//~ if(pipe(p2)==-1){
+						//~ perror("Pipe2 not working\n");
+						//~ exit(1);
+					//~ }
+					
+					if(fork() == 0)            //creating 2nd child
+					{
+						close(STDIN_FILENO);   //closing stdin
+						dup(p[0]);         //replacing stdin with pipe read
+						close(p[1]);       //closing pipe write
+						close(p[0]);
+						
+						//~ close(STDOUT_FILENO);  //closing stdout
+						//~ dup(p2[1]);         //replacing stdout with pipe write
+						//~ close(p2[0]);       //closing pipe read
+						//~ close(p2[1]);
+
+						execvp(l->seq[2][0], l->seq[2]);
+						perror("execvp 2 failed");
+						exit(1);
+					}
+				//}
+				
+				
+				//~ // Le Pipe //
+				//~ int res_pipe = pipe(p);
+				//~ if(res_pipe < 0) {
+					//~ printf("Erreur à la création du pipe %d.\n", i+1);
+					//~ exit(1);
+				//~ }
+
+
+				//~ for (i=0; l->seq[i]!=0; i++) {
+					//~ fpid = fork();
+					//~ if(fpid == 0) {
+						//~ close(p[1]);
+						//~ dup2(p[1], STDOUT_FILENO);
+						//~ close(p[0]);
+						//~ printf(" commande %d : %s\n",i,l->seq[i][0]);
+						//~ exec = execvp(l->seq[i][0],l->seq[i]);
+						//~ printf("exécution :)\n");
+
+						//~ if(exec == -1) {/* Si l'éxécution n'a pas marché on affiche l'erreur */
+							//~ perror("Error ");
+							//~ exit(1);
+						//~ }
+
+					//~ } else {
+						//~ close(p[0]);
+						//~ dup2(p[0], STDIN_FILENO);
+						//~ printf("Je suis le père de %d\n", fpid);
+					//~ }
+					//~ wait(0);
+					//~ printf("Terminaison de %d\n==========================================\n", fpid);
+
+				//~ }
 				
 				//exec = execvp(l->seq[0][0],l->seq[0]);
 				exit(0);
