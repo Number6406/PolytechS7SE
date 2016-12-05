@@ -18,11 +18,6 @@ int dup_out(char* fichier){
 		perror("Error : Output file\n");
 		exit(2);
 	}
-	//~ if(dup2(file,1) < 0) {
-		//~ perror("Error : Output Redirection error\n");
-		//~ exit(2);
-	//~ }
-	//~ close(file);
 	return file;
 }
 
@@ -32,11 +27,6 @@ int dup_in(char* fichier){
 		perror("Error : No input file\n");
 		exit(2);
 	}
-	//~ close(STDIN_FILENO);
-	//~ if(dup(file) < 0) {
-		//~ perror("Error : Input Redirection error\n");
-		//~ exit(2);
-	//~ }
 	return file;
 }
 
@@ -124,7 +114,6 @@ int main() {
 
 			default : // Code du père
 				wait(pid); // Attends la fin d'éxécution du fils
-
 		}
 
 	}
