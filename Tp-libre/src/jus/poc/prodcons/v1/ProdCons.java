@@ -88,12 +88,6 @@ public class ProdCons implements Tampon {
         nb_conso++;
     }
     
-    public void finConsommation() {
-        nb_conso--;
-        nb_messages_tampon--;
-        notifyAll();
-    }
-    
     public synchronized void debutConsommation() throws InterruptedException{
         while(nb_messages_tampon <= 0 || nb_conso >= 0){
             wait();

@@ -49,13 +49,13 @@ public class TestProdCons extends Simulateur {
         
         for(int pi = 0; pi < nbProd; pi ++) {
             producteurs[pi] = new Producteur(prodCons, observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction);
+            producteurs[pi].start();
         }
         
         for(int ci = 0; ci < nbCons; ci++) {
             consommateurs[ci] = new Consommateur(prodCons, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation);
+            consommateurs[ci].start();
         }
-        
-        
         
     }
     
