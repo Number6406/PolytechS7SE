@@ -119,31 +119,7 @@ int main() {
 					}
 					
 					entree = p[0];
-					
-					/*if(fork() == 0) {
-						close(p[1]);
-						dup2(p[1], STDOUT_FILENO);
-						close(p[0]);
-						printf(" commande %d : %s\n",i,l->seq[i][0]);
-						exec = execvp(l->seq[i][0],l->seq[i]);
-						printf("exécution :)\n");
-
-						if(exec == -1) {// Si l'éxécution n'a pas marché on affiche l'erreur
-							perror("Error ");
-							exit(1);
-						}
-
-					} else {
-						close(p[0]);
-						dup2(p[0], STDIN_FILENO);
-						printf("Je suis le père de %d\n", fpid);
-					}
-					wait(0);
-					printf("Terminaison de %d\n==========================================\n", fpid);*/
-
 				}
-				
-				//exec = execvp(l->seq[0][0],l->seq[0]);
 				exit(0);
 
 			default : // Code du père
