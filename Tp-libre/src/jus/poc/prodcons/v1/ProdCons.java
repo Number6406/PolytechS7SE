@@ -37,7 +37,7 @@ public class ProdCons implements Tampon {
             wait();
         }
         
-        System.out.println(msg.toString());
+        System.out.println("<PROD>" + msg.toString());
         //ajout dans le buffer
         ajoutTampon(msg);
         

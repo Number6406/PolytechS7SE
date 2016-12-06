@@ -44,7 +44,7 @@ public class Consommateur extends Acteur implements _Consommateur {
     }
 
     public void traitement() {
-        System.out.println("Traitement du " + nombreDeMessages() + "è message : " + messages.toString());
+        System.out.println("<CONS> Traitement du " + nombreDeMessages() + "è message : " + messages.toString());
     }
 
     public void run() {

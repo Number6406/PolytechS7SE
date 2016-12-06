@@ -19,8 +19,8 @@ public class MessageX implements Message {
     int numero;
     
     public MessageX(Acteur a){
-        message = "Je suis le message du " + (a instanceof Producteur?"producteur":"consommateur");
-        message = message + "numéro" + a.identification() + " :";
+        message = "message du " + (a instanceof Producteur?"producteur":"consommateur");
+        message = message + " numéro " + a.identification() + " : ";
         numero = 0;
     }
     
