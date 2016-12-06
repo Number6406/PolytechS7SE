@@ -33,5 +33,8 @@ tst
 # Debug files
 *.dSYM/
 *.su
-/Tp-libre/nbproject/private/
-/Tp-libre/build/
+*/nbproject/private/
+*/build/
+/tp3/nbproject/private/
+/tp3/build/
+/Tp-libre/dist/
