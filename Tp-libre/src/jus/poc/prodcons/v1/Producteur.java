@@ -42,17 +42,22 @@ public class Producteur extends Acteur implements _Producteur {
      * @throws Exception
      */
     public void produire() throws InterruptedException, Exception{
-        Thread.sleep(tpsTraitement[nb_messages-1]);        
+        Thread.sleep(tpsTraitement[nb_messages-1]);  
+        messages.next();      
+    }
+    
+    public void deposer() throws InterruptedException, Exception{
         tampon.put(this, messages);
         nb_messages--;
-        messages.next();
     }
+    
     
     public void run() {
         // Production de tous les messages
         while(nombreDeMessages() > 0) {
             try {
                 produire();
+                deposer();
             } catch (Exception ex) {
                 Logger.getLogger(Producteur.class.getName()).log(Level.SEVERE, null, ex);
             }

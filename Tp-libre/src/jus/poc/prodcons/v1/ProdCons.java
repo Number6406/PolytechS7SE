@@ -29,40 +29,65 @@ public class ProdCons implements Tampon {
         tete_production = 0;
         tete_consommation = 0;
         nb_messages_tampon = 0;
+        nb_prod = 0;
+        nb_conso = 0;
     }
     
     @Override
     public synchronized void put(_Producteur _, Message msg) throws Exception, InterruptedException {
-        while(nb_messages_tampon >= taille()) {
-            wait();
-        }
         
-        System.out.println("<PROD>" + msg.toString());
+        debutProd();
+        
+        System.out.println("<PROD>" + msg.toString() + " en "+tete_production);
         //ajout dans le buffer
         ajoutTampon(msg);
         
+        finProd();
+        
+    }
+    
+    public synchronized void debutProd() throws InterruptedException{
+        while(nb_messages_tampon >= taille() /*|| nb_prod!=0*/) {
+            wait();
+        }
+        nb_prod++;
+    }
+    
+    public synchronized void finProd(){
         nb_messages_tampon++;
+        nb_prod--;
         notifyAll();
     }
     
-    public void ajoutTampon(Message msg) {
-        tampon[tete_consommation] = msg;
+    public synchronized void ajoutTampon(Message msg) {
+        tampon[tete_production] = msg;
         tete_production = (tete_production+1)%taille();
         nb_messages_tampon++;
     }
 
     @Override
     public synchronized Message get(_Consommateur _) throws Exception, InterruptedException {
-        while(nb_messages_tampon <= 0) {
-            wait();
-        }
+        
+        debutConso();
         
         Message m = retireTampon();
         
-        nb_messages_tampon--;
-        notifyAll();
+        finConso();
         
         return m;
+    }
+    
+    public synchronized void  debutConso() throws InterruptedException{
+        while(nb_messages_tampon <= 0 /*|| nb_conso > 0*/) {
+            wait();
+        }
+        nb_conso++;
+    }
+    
+    public synchronized void finConso(){
+        nb_messages_tampon--;
+        nb_conso--;
+        notifyAll();
     }
     
     public Message retireTampon() {

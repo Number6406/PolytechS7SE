@@ -38,20 +38,20 @@ public class Consommateur extends Acteur implements _Consommateur {
     public void consommer() throws InterruptedException, Exception {
         messages = tampon.get(this);
         nb_messages++;
-        tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
-        Thread.sleep(tpsTraitement);
-        traitement();
     }
 
-    public void traitement() {
-        System.out.println("<CONS> Traitement du " + nombreDeMessages() + "è message : " + messages.toString());
+    public void traiter() throws InterruptedException {
+        tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
+        Thread.sleep(tpsTraitement);
+        System.out.println("<CONS><"+ this.identification()+"> Traitement du " + nombreDeMessages() + "è message : " + messages.toString());
     }
 
     public void run() {
         // comment savoir quand stopper le programme ?
         try {
-            while(true) {
+            while(tampon.enAttente()>0) {
                 consommer();
+                traiter();
             }
         } catch (Exception ex) {
             Logger.getLogger(Consommateur.class.getName()).log(Level.SEVERE, null, ex);
