@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
+import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
 
@@ -23,7 +24,7 @@ public class Consommateur extends Acteur implements _Consommateur {
 
     private ProdCons tampon;
     private int nb_messages;
-    private MessageX messages;
+    private Message messages;
     private int tpsTraitement;
     
     public Consommateur(ProdCons tampon, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException {
@@ -35,7 +36,7 @@ public class Consommateur extends Acteur implements _Consommateur {
     }
     
     public void consommer() throws InterruptedException, Exception {
-        messages = (MessageX) tampon.get(this);
+        messages = tampon.get(this);
         nb_messages++;
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement);
