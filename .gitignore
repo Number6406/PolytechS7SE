@@ -35,6 +35,6 @@ tst
 *.su
 */nbproject/private/
 */build/
-/tp3/nbproject/private/
-/tp3/build/
+/tp3/nbproject
+/tp3/build
 /Tp-libre/dist/
