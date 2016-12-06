@@ -45,7 +45,6 @@ public class Consommateur extends Acteur implements _Consommateur {
         enTraitement = true;
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement);
-        System.out.println("J'ai fini de traiter");
         enTraitement = false;
     }
 

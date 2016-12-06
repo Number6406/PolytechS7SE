@@ -73,9 +73,9 @@ public class TestProdCons extends Simulateur {
         for(int ci = 0; ci < nbCons; ci++) {
             while(consommateurs[ci].traitement()) {
                 Thread.sleep(1000);
-                System.out.println("J'attends la fin du traitement");
+                //System.out.println("J'attends la fin du traitement");
             }
-            System.out.println("C["+ci+"] Ne traite plus");
+            //System.out.println("C["+ci+"] Ne traite plus");
             consommateurs[ci].interrupt();
         }
         
