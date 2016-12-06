@@ -36,22 +36,16 @@ public class Producteur extends Acteur implements _Producteur {
         //observateur.newProducteur(this);
     }
     
-    public synchronized void produire() throws InterruptedException{
-        wait(tpsTraitement[nb_messages]);
-        nb_messages--;
-        messages.next();
-    }
-    
     /**
      *
      * @throws InterruptedException
      * @throws Exception
      */
-    public void deposer() throws InterruptedException, Exception{
-        produire();
-        tampon.debutProduction();
+    public void produire() throws InterruptedException, Exception{
+        Thread.sleep(tpsTraitement[nb_messages-1]);        
         tampon.put(this, messages);
-        tampon.finProduction();
+        nb_messages--;
+        messages.next();
     }
     
     public void run() {

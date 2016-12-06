@@ -35,10 +35,10 @@ public class ProdCons implements Tampon {
     
     @Override
     public void put(_Producteur _, Message msg) throws Exception, InterruptedException {
-        //debutProduction();
+        debutProduction();
         System.out.println(msg.toString());
         //ajout dans le buffer
-        //finProduction();
+        finProduction();
     }
     
     public void ajoutTampon(Message msg) {
@@ -57,7 +57,7 @@ public class ProdCons implements Tampon {
         nb_prod++;
     }
     
-    synchronized public void finProduction() {
+    public synchronized void finProduction() {
         nb_prod--;
         nb_messages_tampon++;
         notifyAll();
@@ -81,15 +81,8 @@ public class ProdCons implements Tampon {
         return m;
     }
     
-    public void debutConsommation(_Consommateur c) throws InterruptedException {
+    synchronized public void debutConsommation(_Consommateur c) throws InterruptedException {
         while(nb_conso != 0 || nb_messages_tampon != 0) {
-            c.wait();
-        }
-        nb_conso++;
-    }
-    
-    public synchronized void debutConsommation() throws InterruptedException{
-        while(nb_messages_tampon <= 0 || nb_conso >= 0){
             wait();
         }
         nb_conso++;

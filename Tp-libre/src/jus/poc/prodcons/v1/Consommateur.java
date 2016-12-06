@@ -24,21 +24,21 @@ public class Consommateur extends Acteur implements _Consommateur {
     private ProdCons tampon;
     private int nb_messages;
     private MessageX messages;
-    private final int[] tpsTraitement;
+    private int tpsTraitement;
     
     public Consommateur(ProdCons tampon, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException {
         super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
         this.tampon = tampon;
-        this.tpsTraitement = Aleatoire.valeurs(nb_messages, moyenneTempsDeTraitement, deviationTempsDeTraitement);
         this.nb_messages = 0;
         
         //observateur.newConsommateur(this);
     }
     
     public void consommer() throws InterruptedException, Exception {
-        tampon.get(this);
+        messages = (MessageX) tampon.get(this);
         nb_messages++;
-        wait(tpsTraitement[nb_messages]);
+        tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
+        Thread.sleep(tpsTraitement);
         traitement();
     }
 
@@ -49,7 +49,9 @@ public class Consommateur extends Acteur implements _Consommateur {
     public void run() {
         // comment savoir quand stopper le programme ?
         try {
-            consommer();
+            while(true) {
+                consommer();
+            }
         } catch (Exception ex) {
             Logger.getLogger(Consommateur.class.getName()).log(Level.SEVERE, null, ex);
         }
