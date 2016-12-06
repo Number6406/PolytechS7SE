@@ -57,6 +57,30 @@ public class TestProdCons extends Simulateur {
             consommateurs[ci].start();
         }
         
+        /* Attente de la fin de production */
+        for (int pi = 0; pi < nbProd; pi ++) {
+            producteurs[pi].join();
+        }
+        
+        System.out.println("<INFO> Fin de la production");
+        
+        /* Attente de la fin de consommation de tous les messages */
+        do {
+            Thread.yield();
+        } while (prodCons.enAttente() > 0);
+        
+        /* Fin des consommateurs */
+        for(int ci = 0; ci < nbCons; ci++) {
+            while(consommateurs[ci].traitement()) {
+                Thread.sleep(1000);
+                System.out.println("J'attends la fin du traitement");
+            }
+            System.out.println("C["+ci+"] Ne traite plus");
+            consommateurs[ci].interrupt();
+        }
+        
+        System.out.println("<INFO> Fin de la consommation (et du programme)");
+        
     }
     
     public static void main(String[] args){

@@ -1,5 +1,7 @@
 package jus.poc.prodcons.v1;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -17,14 +19,14 @@ import jus.poc.prodcons._Producteur;
  */
 public class ProdCons implements Tampon {
     
+    DateTimeFormatter dateFormat;
     private Message[] tampon;
     private int tete_production;
     private int tete_consommation;
     private int nb_messages_tampon;
-    private int nb_prod;
-    private int nb_conso;
     
     public ProdCons(int taille_tampon) {
+        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         tete_production = 0;
         tete_consommation = 0;
@@ -33,48 +35,42 @@ public class ProdCons implements Tampon {
     
     @Override
     public synchronized void put(_Producteur p, Message msg) throws Exception, InterruptedException {
+        
         while(nb_messages_tampon >= taille()) {
             wait();
         }
         
-        System.out.println("<PROD>" + msg.toString());
+        System.out.println("["+ dateFormat.format(LocalDateTime.now()) +"]<PROD> " + msg.toString() + " en "+tete_production);
         //ajout dans le buffer
-        ajoutTampon(msg);
+        tampon[tete_production] = msg;
+        tete_production = (tete_production+1)%taille();
         
         nb_messages_tampon++;
-        notifyAll();
-    }
-    
-    public void ajoutTampon(Message msg) {
-        tampon[tete_consommation] = msg;
-        tete_production = (tete_production+1)%taille();
-        nb_messages_tampon++;
+        
+        notifyAll(); 
     }
 
     @Override
     public synchronized Message get(_Consommateur c) throws Exception, InterruptedException {
+
         while(nb_messages_tampon <= 0) {
             wait();
+            // Un message d'interruptedException s'affiche car on interrupt les threads à la fin du programme. C'est "normal"
         }
         
-        Message m = retireTampon();
+        Message m = tampon[tete_consommation];
+        System.out.println("["+ dateFormat.format(LocalDateTime.now()) +"]<CONS><"+c.identification()+"> " + m.toString());
+        tete_consommation = (tete_consommation+1)%taille();
         
         nb_messages_tampon--;
         notifyAll();
         
         return m;
     }
-    
-    public Message retireTampon() {
-        Message m = tampon[tete_consommation];
-        tete_consommation = (tete_consommation+1)%taille();
-        nb_messages_tampon--;
-        return m;
-    }    
 
     @Override
-    public int enAttente() {
-        return taille() - nb_messages_tampon;
+    public synchronized int enAttente() {
+        return nb_messages_tampon;
     }
 
     @Override
