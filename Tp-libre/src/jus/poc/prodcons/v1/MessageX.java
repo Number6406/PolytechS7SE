@@ -15,22 +15,16 @@ import jus.poc.prodcons.Message;
  */
 public class MessageX implements Message {
     
-    String message;
+    String message = "";
     int numero;
     
-    public MessageX(Acteur a){
-        message = "Message du " + (a instanceof Producteur?"producteur":"consommateur");
-        message = message + " numéro " + a.identification() + " : ";
-        numero = 0;
+    public MessageX(Acteur a,int num){
+        numero = num;
     }
     
     @Override
     public String toString(){
         return message + numero;
-    }
-    
-    public void next(){
-        numero++;
     }
 
 }

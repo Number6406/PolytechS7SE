@@ -24,14 +24,16 @@ public class Producteur extends Acteur implements _Producteur {
     private final ProdCons tampon;
     private int nb_messages;
     private final int[] tpsTraitement;
-    private MessageX messages;
+    //private MessageX messages;
+    private int numero_de_message;
     
     public Producteur(ProdCons tampon,Observateur obs, int nombreMoyenDeProduction, int deviationNombreMoyenDeProduction, int tempsMoyenProduction, int deviationTempsMoyenProduction) throws ControlException{
         super(Acteur.typeProducteur,obs,tempsMoyenProduction,deviationTempsMoyenProduction);
         this.tampon = tampon;
         nb_messages = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreMoyenDeProduction);
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, tempsMoyenProduction, deviationTempsMoyenProduction);
-        this.messages = new MessageX(this);
+        numero_de_message = 0;
+        //this.messages = new MessageX(this,numero_de_message);
         
         //observateur.newProducteur(this);
     }
@@ -42,12 +44,12 @@ public class Producteur extends Acteur implements _Producteur {
      * @throws Exception
      */
     public void produire() throws InterruptedException, Exception{
-        Thread.sleep(tpsTraitement[nb_messages-1]);
-        messages.next();      
+        Thread.sleep(tpsTraitement[nb_messages-1]); 
+        numero_de_message++;
     }
     
     public void deposer() throws InterruptedException, Exception{
-        tampon.put(this, messages);
+        tampon.put(this, new MessageX(this,numero_de_message));
         nb_messages--;
     }
     
