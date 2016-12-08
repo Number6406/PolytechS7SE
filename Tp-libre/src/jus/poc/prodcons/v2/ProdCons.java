@@ -24,8 +24,8 @@ public class ProdCons implements Tampon {
     DateTimeFormatter dateFormat;
     private Message[] tampon;
     
-    private static Semaphore sem_prod;
-    private static Semaphore sem_cons;
+    private static MonSemaphore sem_prod;
+    private static MonSemaphore sem_cons;
     
     private int tete_production;
     private int tete_consommation;
@@ -35,8 +35,8 @@ public class ProdCons implements Tampon {
         dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         
-        sem_prod = new Semaphore(taille_tampon);
-        sem_cons = new Semaphore(0);
+        sem_prod = new MonSemaphore(taille_tampon);
+        sem_cons = new MonSemaphore(0);
         
         tete_production = 0;
         tete_consommation = 0;
@@ -46,7 +46,7 @@ public class ProdCons implements Tampon {
     @Override
     public void put(_Producteur p, Message msg) throws Exception, InterruptedException {
         
-        sem_prod.acquire();
+        sem_prod.P();
         synchronized(this) {
             
             Logger.getInstance().productionLogger(p, msg, tete_production);
@@ -56,7 +56,7 @@ public class ProdCons implements Tampon {
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++;            
         }
-        sem_cons.release();
+        sem_cons.V();
         
     }
 
@@ -64,7 +64,7 @@ public class ProdCons implements Tampon {
     public Message get(_Consommateur c) throws Exception, InterruptedException {
         Message m;
             
-        sem_cons.acquire();
+        sem_cons.P();
         synchronized(this) {
             m = tampon[tete_consommation];
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
@@ -72,7 +72,7 @@ public class ProdCons implements Tampon {
 
             nb_messages_tampon--;           
         }
-        sem_prod.release();
+        sem_prod.V();
         
         return m;
     }

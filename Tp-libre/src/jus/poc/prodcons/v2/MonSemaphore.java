@@ -18,6 +18,7 @@ public class MonSemaphore {
     private final List<Thread> file;
     
     public MonSemaphore(int nb_ressources){
+        System.err.println("jus.poc.prodcons.v2.MonSemaphore.<init>() : nb_ressources = "+nb_ressources);
         this.nb_ressources = nb_ressources;
         this.file = new LinkedList<>();
     }
@@ -39,7 +40,8 @@ public class MonSemaphore {
         
     }
     
-    public void L(){
+    public void V(){
+        System.err.println("jus.poc.prodcons.v2.MonSemaphore.V() : j'ai "+nb_ressources+" ressources");
         nb_ressources++;
         if(nb_ressources <= 0){
             Thread p = get(file);

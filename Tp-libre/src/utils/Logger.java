@@ -42,11 +42,11 @@ public class Logger {
     /* Partie des gestion des messages */
     
     public void productionLogger(_Producteur p, Message m, int buffer) {
-        System.out.format("[LOG:%3d|%s] <%s:%2d> production d'un message : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), PROD_IDENTIFIER, p.identification(), m.toString(), buffer);
+        System.out.format("[LOG:%3d|%s] <%s:%2d> production   : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), PROD_IDENTIFIER, p.identification(), m.toString(), buffer);
     }
     
     public void consommationLogger(_Consommateur c, Message m, int buffer) {
-        System.out.format("[LOG:%3d|%s] <%s:%2d> consommation d'un message : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), m.toString(), buffer);
+        System.out.format("[LOG:%3d|%s] <%s:%2d> consommation : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), m.toString(), buffer);
     }
     
     public void traitementLogger(_Consommateur c, Message m, int time) {
