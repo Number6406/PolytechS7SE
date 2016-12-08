@@ -1,8 +1,7 @@
 package jus.poc.prodcons.v1;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import utils.Logger;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -24,7 +23,7 @@ public class Consommateur extends Acteur implements _Consommateur {
 
     private ProdCons tampon;
     private int nb_messages;
-    private Message messages;
+    private Message message;
     private int tpsTraitement;
     private boolean enTraitement = false;
     
@@ -32,12 +31,10 @@ public class Consommateur extends Acteur implements _Consommateur {
         super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
         this.tampon = tampon;
         this.nb_messages = 0;
-        
-        //observateur.newConsommateur(this);
     }
     
     public void consommer() throws InterruptedException, Exception {
-        messages = tampon.get(this);
+        message = tampon.get(this);
         nb_messages++;
     }
 
@@ -45,6 +42,7 @@ public class Consommateur extends Acteur implements _Consommateur {
         enTraitement = true;
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement);
+        Logger.getInstance().traitementLogger(this, message, tpsTraitement);
         enTraitement = false;
     }
 
@@ -55,7 +53,7 @@ public class Consommateur extends Acteur implements _Consommateur {
                 traiter();
             }
         } catch (Exception ex) {
-            Logger.getLogger(Consommateur.class.getName()).log(Level.SEVERE, null, ex);
+            //System.err.println(ex);
         }
     }
     

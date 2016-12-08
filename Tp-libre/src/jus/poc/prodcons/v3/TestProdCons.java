@@ -2,10 +2,9 @@ package jus.poc.prodcons.v3;
 
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
+import utils.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,7 +40,7 @@ public class TestProdCons extends Simulateur {
 
     @Override
     protected void run() throws Exception {
-        init("option.xml");
+        init("option2.xml");
         
         prodCons = new ProdCons(nbBuffer);
         producteurs = new Producteur[nbProd];
@@ -62,7 +61,7 @@ public class TestProdCons extends Simulateur {
             producteurs[pi].join();
         }
         
-        System.out.println("<INFO> Fin de la production");
+        Logger.getInstance().infoLogger("Fin de la production");
         
         /* Attente de la fin de consommation de tous les messages */
         do {
@@ -79,7 +78,7 @@ public class TestProdCons extends Simulateur {
             consommateurs[ci].interrupt();
         }
         
-        System.out.println("<INFO> Fin de la consommation (et du programme)");
+        Logger.getInstance().infoLogger("Fin de la consommation (et du programme)");
         
     }
     
