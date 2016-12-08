@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v1;
+package jus.poc.prodcons.v4;
 
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Message;
@@ -17,9 +17,11 @@ public class MessageX implements Message {
     
     private String message = "";
     private int numero;
+    private int nb_exemplaires;
     
-    public MessageX(Acteur a,int num){
+    public MessageX(Acteur a,int num, int nb_exemplaires){
         numero = num;
+        this.nb_exemplaires = nb_exemplaires;
         message = "prod:"+a.identification()+"|id:"+num;
     }
     
