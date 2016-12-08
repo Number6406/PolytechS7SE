@@ -33,12 +33,12 @@ public class Consommateur extends Acteur implements _Consommateur {
         this.nb_messages = 0;
     }
     
-    public void consommer() throws InterruptedException, Exception {
+    public void retirer() throws InterruptedException, Exception {
         message = tampon.get(this);
         nb_messages++;
     }
 
-    public void traiter() throws InterruptedException {
+    public void consommer() throws InterruptedException {
         enTraitement = true;
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement);
@@ -49,8 +49,8 @@ public class Consommateur extends Acteur implements _Consommateur {
     public void run() {
         try {
             while(true) {
+                retirer();
                 consommer();
-                traiter();
             }
         } catch (Exception ex) {
             //System.err.println(ex);
