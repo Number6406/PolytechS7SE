@@ -7,6 +7,8 @@ package jus.poc.prodcons.v2;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -14,38 +16,48 @@ import java.util.List;
  */
 public class MonSemaphore {
     
+    private Lock l;
+    private int val_init;
     private int nb_ressources;
     private final List<Thread> file;
     
     public MonSemaphore(int nb_ressources){
         System.err.println("jus.poc.prodcons.v2.MonSemaphore.<init>() : nb_ressources = "+nb_ressources);
         this.nb_ressources = nb_ressources;
+        this.val_init = nb_ressources;
         this.file = new LinkedList<>();
+        this.l = new ReentrantLock();
     }
     
-    private void put(Thread t, List<Thread> f){
-        f.add(t);
-    };
-    
-    private Thread get(List<Thread> f){
-        return f.get(0);
-    };
-    
+       
     public void P(){
-        nb_ressources--;
-        if(nb_ressources < 0){
-            put(Thread.currentThread(),file);
-            Thread.currentThread().suspend();
+        l.lock();
+        try {
+            System.err.println("jus.poc.prodcons.v2.MonSemaphore.P() de val init " + val_init + " : j'ai "+nb_ressources+" ressources");
+            nb_ressources--;
+            if(nb_ressources < 0){
+                System.out.println("jus.poc.prodcons.v2.MonSemaphore.P() : current Thread : " + Thread.currentThread().toString());
+                file.add(Thread.currentThread());
+                l.unlock();
+                Thread.currentThread().suspend();
+                l.lock();
+            }
+        } finally {
+            l.unlock();
         }
-        
     }
     
     public void V(){
-        System.err.println("jus.poc.prodcons.v2.MonSemaphore.V() : j'ai "+nb_ressources+" ressources");
-        nb_ressources++;
-        if(nb_ressources <= 0){
-            Thread p = get(file);
-            p.resume();
+        l.lock();
+        try {
+            System.err.println("jus.poc.prodcons.v2.MonSemaphore.V() de val init " + val_init + " : j'ai "+nb_ressources+" ressources");
+            nb_ressources++;
+            if(nb_ressources <= 0){
+                Thread p = file.get(0);
+                p.resume();
+            }
+        } finally {
+            l.unlock();
         }
     }
     
