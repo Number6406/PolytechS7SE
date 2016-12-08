@@ -20,11 +20,12 @@ public class MessageX implements Message {
     
     public MessageX(Acteur a,int num){
         numero = num;
+        message = "prod:"+a.identification()+"|id:"+num;
     }
     
     @Override
     public String toString(){
-        return message + numero;
+        return message;
     }
 
 }

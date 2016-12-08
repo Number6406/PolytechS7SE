@@ -20,14 +20,12 @@ import utils.Logger;
  */
 public class ProdCons implements Tampon {
     
-    DateTimeFormatter dateFormat;
     private Message[] tampon;
     private int tete_production;
     private int tete_consommation;
     private int nb_messages_tampon;
     
     public ProdCons(int taille_tampon) {
-        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         tete_production = 0;
         tete_consommation = 0;
@@ -40,7 +38,7 @@ public class ProdCons implements Tampon {
             wait();
         }
         
-        Logger.getInstance().productionLogger(p, msg);
+        Logger.getInstance().productionLogger(p, msg, tete_production);
         //ajout dans le buffer
         tampon[tete_production] = msg;
         tete_production = (tete_production+1)%taille();
@@ -59,7 +57,7 @@ public class ProdCons implements Tampon {
         }
         
         Message m = tampon[tete_consommation];
-        Logger.getInstance().consommationLogger(c, m);
+        Logger.getInstance().consommationLogger(c, m,tete_consommation);
         tete_consommation = (tete_consommation+1)%taille();
         
         nb_messages_tampon--;

@@ -7,6 +7,7 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
+import utils.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -47,11 +48,12 @@ public class ProdCons implements Tampon {
         
         sem_prod.acquire();
         synchronized(this) {
-            System.out.println("["+ dateFormat.format(LocalDateTime.now()) +"]<PROD> " + msg.toString() + " en "+tete_production);
+            
+            Logger.getInstance().productionLogger(p, msg, tete_production);
+            
             //ajout dans le buffer
             tampon[tete_production] = msg;
             tete_production = (tete_production+1)%taille();
-
             nb_messages_tampon++;            
         }
         sem_cons.release();
@@ -65,7 +67,7 @@ public class ProdCons implements Tampon {
         sem_cons.acquire();
         synchronized(this) {
             m = tampon[tete_consommation];
-            System.out.println("["+ dateFormat.format(LocalDateTime.now()) +"]<CONS><"+c.identification()+"> " + m.toString());
+            Logger.getInstance().consommationLogger(c, m,tete_consommation);
             tete_consommation = (tete_consommation+1)%taille();
 
             nb_messages_tampon--;           
