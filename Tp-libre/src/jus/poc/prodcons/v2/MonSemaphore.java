@@ -7,6 +7,8 @@ package jus.poc.prodcons.v2;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -30,8 +32,9 @@ public class MonSemaphore {
     
     public synchronized void V(){
         System.err.println("jus.poc.prodcons.v2.MonSemaphore.V() : j'ai "+nb_ressources+" ressources");
-        nb_ressources++;
-        notify();
+        if((++nb_ressources)>0) {
+            notify();
+        }
     }
     
     
