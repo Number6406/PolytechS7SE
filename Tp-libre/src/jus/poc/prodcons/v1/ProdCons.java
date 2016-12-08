@@ -36,7 +36,6 @@ public class ProdCons implements Tampon {
     
     @Override
     public synchronized void put(_Producteur p, Message msg) throws Exception, InterruptedException {
-        
         while(nb_messages_tampon >= taille()) {
             wait();
         }
