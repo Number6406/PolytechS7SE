@@ -15,38 +15,23 @@ import java.util.List;
 public class MonSemaphore {
     
     private int nb_ressources;
-    private final List<Thread> file;
     
     public MonSemaphore(int nb_ressources){
         System.err.println("jus.poc.prodcons.v2.MonSemaphore.<init>() : nb_ressources = "+nb_ressources);
         this.nb_ressources = nb_ressources;
-        this.file = new LinkedList<>();
     }
     
-    private void put(Thread t, List<Thread> f){
-        f.add(t);
-    };
-    
-    private Thread get(List<Thread> f){
-        return f.get(0);
-    };
-    
-    public void P(){
-        nb_ressources--;
-        if(nb_ressources < 0){
-            put(Thread.currentThread(),file);
-            Thread.currentThread().suspend();
+    public synchronized void P() throws InterruptedException{
+        if(nb_ressources <= 0){
+            wait();
         }
-        
+        nb_ressources--;
     }
     
-    public void V(){
+    public synchronized void V(){
         System.err.println("jus.poc.prodcons.v2.MonSemaphore.V() : j'ai "+nb_ressources+" ressources");
         nb_ressources++;
-        if(nb_ressources <= 0){
-            Thread p = get(file);
-            p.resume();
-        }
+        notify();
     }
     
     
