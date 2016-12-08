@@ -2,6 +2,7 @@ package jus.poc.prodcons.v3;
 
 
 import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.Message;
 import jus.poc.prodcons._Producteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -23,7 +24,7 @@ public class Producteur extends Acteur implements _Producteur {
     private final ProdCons tampon;
     private int nb_messages;
     private final int[] tpsTraitement;
-    //private MessageX messages;
+    private Message m;
     private int numero_de_message;
     
     public Producteur(ProdCons tampon,Observateur obs, int nombreMoyenDeProduction, int deviationNombreMoyenDeProduction, int tempsMoyenProduction, int deviationTempsMoyenProduction) throws ControlException{
@@ -43,12 +44,14 @@ public class Producteur extends Acteur implements _Producteur {
      * @throws Exception
      */
     public void produire() throws InterruptedException, Exception{
-        Thread.sleep(tpsTraitement[nb_messages-1]); 
-        numero_de_message++;
+        Thread.sleep(tpsTraitement[nb_messages-1]);
+        m = new MessageX(this,numero_de_message++);
+        observateur.productionMessage(this, m, moyenneTempsDeTraitement);
     }
     
     public void deposer() throws InterruptedException, Exception{
-        tampon.put(this, new MessageX(this,numero_de_message));
+        tampon.put(this, m);
+        observateur.depotMessage(this, m);
         nb_messages--;
     }
     
@@ -57,6 +60,7 @@ public class Producteur extends Acteur implements _Producteur {
         // Production de tous les messages
         while(nombreDeMessages() > 0) {
             try {
+                
                 produire();
                 deposer();
             } catch (Exception ex) {
