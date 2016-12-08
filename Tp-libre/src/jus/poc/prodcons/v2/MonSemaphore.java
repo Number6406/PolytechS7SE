@@ -24,15 +24,14 @@ public class MonSemaphore {
     }
     
     public synchronized void P() throws InterruptedException{
-        if(nb_ressources <= 0){
+        if((--nb_ressources) < 0){
             wait();
         }
-        nb_ressources--;
     }
     
     public synchronized void V(){
         System.err.println("jus.poc.prodcons.v2.MonSemaphore.V() : j'ai "+nb_ressources+" ressources");
-        if((++nb_ressources)>0) {
+        if((++nb_ressources)<=0) {
             notify();
         }
     }
