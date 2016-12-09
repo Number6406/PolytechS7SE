@@ -33,7 +33,7 @@ int dup_in(char* fichier){
 void executer(int entree, int sortie,char** cmd){
 	int pid;
 	
-	if(pid = fork() == 0){
+	if((pid = fork()) == 0){
 		if(entree != STDIN_FILENO){
 			close(STDIN_FILENO);
 			if(dup(entree) < 0){
@@ -61,7 +61,7 @@ int main() {
 		struct cmdline *l;
 		int i = 0;
 		int pid;
-		int exec = 0;
+		//int exec = 0;
 		int entree = STDIN_FILENO;
 		int sortie = STDOUT_FILENO;
 
