@@ -18,6 +18,7 @@ import utils.Logger;
  */
 public class TestProdCons extends Simulateur {
     
+    protected static int debug;
     protected static int nbProd;
     protected static int nbCons;
     protected static int nbBuffer;
@@ -105,6 +106,7 @@ public class TestProdCons extends Simulateur {
         }
         Properties option = new Properties("jus/poc/prodcons/options/"+file);
         
+        debug = Integer.parseInt(option.getProperty("debug"));
         nbProd = Integer.parseInt(option.getProperty("nbProd"));
         nbCons = Integer.parseInt(option.getProperty("nbCons"));
         nbBuffer = Integer.parseInt(option.getProperty("nbBuffer"));
@@ -116,6 +118,8 @@ public class TestProdCons extends Simulateur {
         deviationNombreMoyenDeProduction = Integer.parseInt(option.getProperty("deviationNombreMoyenDeProduction"));
         nombreMoyenNbExemplaire = Integer.parseInt(option.getProperty("nombreMoyenNbExemplaire"));
         deviationNombreMoyenNbExemplaire = Integer.parseInt(option.getProperty("deviationNombreMoyenNbExemplaire"));
+    
+        Logger.getInstance().setDebug(debug);
     }
     
 }

@@ -22,11 +22,12 @@ public class Logger {
     private static final String PROD_IDENTIFIER = "PROD";
     private static final String CONS_IDENTIFIER = "CONS";
     private static final String INFO_IDENTIFIER = "INFO";
+    private static int debug = 0;
     
     /* Logger est un singleton */
     
-    private Logger() {
-        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+    private Logger(){
+        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");        
     }
     
     private static Logger INSTANCE = new Logger();
@@ -42,19 +43,23 @@ public class Logger {
     /* Partie des gestion des messages */
     
     public void productionLogger(_Producteur p, Message m, int buffer) {
-        System.out.format("[LOG:%3d|%s] <%s:%2d> production   : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), PROD_IDENTIFIER, p.identification(), m.toString(), buffer);
+        if(debug==1)System.out.format("[LOG:%3d|%s] <%s:%2d> production   : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), PROD_IDENTIFIER, p.identification(), m.toString(), buffer);
     }
     
     public void consommationLogger(_Consommateur c, Message m, int buffer) {
-        System.out.format("[LOG:%3d|%s] <%s:%2d> consommation : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), m.toString(), buffer);
+        if(debug==1)System.out.format("[LOG:%3d|%s] <%s:%2d> consommation : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), m.toString(), buffer);
     }
     
     public void traitementLogger(_Consommateur c, Message m, int time) {
-        System.out.format("[LOG:%3d|%s] <%s:%2d> fin traitement du message (%d secondes) : (%s)%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), time, m.toString());
+        if(debug==1)System.out.format("[LOG:%3d|%s] <%s:%2d> fin traitement du message (%d secondes) : (%s)%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), time, m.toString());
     }
     
     public void infoLogger(String message) {
-        System.out.format("[LOG:%3d|%s] <%s> %s%n", currentId(), dateFormat.format(LocalDateTime.now()), INFO_IDENTIFIER, message);
+        if(debug==1)System.out.format("[LOG:%3d|%s] <%s> %s%n", currentId(), dateFormat.format(LocalDateTime.now()), INFO_IDENTIFIER, message);
+    }
+    
+    public void setDebug(int debug){
+        this.debug = debug;
     }
     
 }
