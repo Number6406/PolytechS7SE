@@ -11,7 +11,10 @@
 
 #include "readcmd.h"
 
-
+/**
+ * Redirection en entree depuis un fichier
+ * Renvoie le descripteur de fichier.
+ */
 int dup_out(char* fichier){
 	int file = open(fichier, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
 	if(file < 0) {
@@ -21,6 +24,10 @@ int dup_out(char* fichier){
 	return file;
 }
 
+/**
+ * Redirection en sortie dans un fichier
+ * Renvoie le descripteur de fichier.
+ */
 int dup_in(char* fichier){
 	int file = open(fichier, O_RDONLY);
 	if(file < 0) {
@@ -30,18 +37,23 @@ int dup_in(char* fichier){
 	return file;
 }
 
+/**
+ * Execution d'une commande cmd
+ * avec redirection en entree
+ * et sortie possible 
+ */
 void executer(int entree, int sortie,char** cmd){
 	int pid;
 	
-	if((pid = fork()) == 0){
-		if(entree != STDIN_FILENO){
+	if((pid = fork()) == 0){ // Code du fils
+		if(entree != STDIN_FILENO){ // Si redirection en entrée
 			close(STDIN_FILENO);
 			if(dup(entree) < 0){
 				perror("Error : Input Redirection error\n");
 				exit(2);
 			}
 		}
-		if(sortie != STDOUT_FILENO){
+		if(sortie != STDOUT_FILENO){ // Si redirection en sortie
 			close(STDOUT_FILENO);
 			if(dup(sortie) < 0){
 				perror("Error : Output Redirection error\n");
@@ -50,7 +62,7 @@ void executer(int entree, int sortie,char** cmd){
 		}
 		execvp(cmd[0],cmd);
 	}
-	else {
+	else { // Code du père
 		wait(pid);
 	}
 }
@@ -61,7 +73,6 @@ int main() {
 		struct cmdline *l;
 		int i = 0;
 		int pid;
-		//int exec = 0;
 		int entree = STDIN_FILENO;
 		int sortie = STDOUT_FILENO;
 
@@ -101,7 +112,8 @@ int main() {
 						exit(1);
 					}
 					
-					if(l->seq[i+1]==NULL){
+					if(l->seq[i+1]==NULL){ 
+						// Si c'est la dernière commande on redirige dans le fichier de sortie
 						executer(entree,sortie,l->seq[i]);
 					} else {
 						executer(entree,p[1],l->seq[i]);

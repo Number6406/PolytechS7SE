@@ -117,6 +117,14 @@ void mem_print(void *zone, size_t size)
 	printf(" (OU) %ld %ld\n", (unsigned long)(zone - (void*)mem_heap), (unsigned long)size);
 }
 
+/**
+ * Affichage de la mémoire libre sous le format
+ * 
+ * adresse début en héxa 	---------------------	adresse debut
+ * 							| taille du bloc	|
+ * adresse de fin en héxa	---------------------	adresse de fin
+ * 
+ */
 void mem_print_perso(void *zone, size_t size)
 {
   printf("0x%08lX  ------------ %04ld\n",
@@ -147,6 +155,14 @@ void used()
 
 }
 
+/**
+ * Affichage de la mémoire occupée sous le format
+ * 
+ * adresse début en héxa 	---------------------	adresse debut
+ * 		id du bloc			| taille du bloc	|
+ * adresse de fin en héxa	---------------------	adresse de fin
+ * 
+ */
 void used_perso()
 {
   unsigned long i,size;

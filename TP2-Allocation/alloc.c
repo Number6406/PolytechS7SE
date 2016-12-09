@@ -22,7 +22,7 @@ struct bb {
 	size_t size;
 };
 
-//char mem_heap[HEAP_SIZE]; est dans le .h déjà
+//char mem_heap[HEAP_SIZE] est dans le .h déjà
 
 
 /** 
@@ -104,8 +104,6 @@ void *mem_alloc(size_t size){
 	precedent = NULL;
 	courant = *debut; // Première zone libre
 	
-	//printf("mem_heap 0x%lx \n",(unsigned long)mem_heap);
-	//printf("premiere zone libre 0x%lx [%ld]\n",(unsigned long)courant,courant->size);
 	// Tant que la zone n'est pas assez grande avancer
 	while(courant != NULL && (courant->size - sizeof(struct bb)) < size){ 
 		precedent = courant;
@@ -113,7 +111,6 @@ void *mem_alloc(size_t size){
 	}
 	
 	if(courant == NULL) {
-		//fprintf(stderr,"Pas d'espace disponible de cette taille\n");
 		return NULL;
 	} else {
 		char* zone = (char*)courant; // Le début de la zone
