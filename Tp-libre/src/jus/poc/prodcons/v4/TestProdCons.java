@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v4;
 
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class TestProdCons extends Simulateur {
         observateur.init(nbProd, nbCons, nbBuffer);
         
         for(int pi = 0; pi < nbProd; pi ++) {
-            producteurs[pi] = new Producteur(prodCons, observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction);
+            producteurs[pi] = new Producteur(prodCons, observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction, nombreMoyenNbExemplaire, deviationNombreMoyenNbExemplaire);
             observateur.newProducteur(producteurs[pi]);
             producteurs[pi].start();
         }

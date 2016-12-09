@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v2;
+package jus.poc.prodcons.v4;
 
 
 import utils.Logger;
@@ -35,13 +35,15 @@ public class Consommateur extends Acteur implements _Consommateur {
     
     public void retirer() throws InterruptedException, Exception {
         message = tampon.get(this);
+        observateur.retraitMessage(this, message);
         nb_messages++;
     }
 
-    public void consommer() throws InterruptedException {
+    public void consommer() throws InterruptedException, ControlException {
         enTraitement = true;
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement);
+        observateur.consommationMessage(this, message, tpsTraitement);
         Logger.getInstance().traitementLogger(this, message, tpsTraitement);
         enTraitement = false;
     }
