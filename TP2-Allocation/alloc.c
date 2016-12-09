@@ -93,8 +93,8 @@ void mem_init(){
  * Ici on implémente la méthode du First Fit
  */
 void *mem_alloc(size_t size){
-	if(size < sizeof(struct fb)){ // Si la taille allouée est plus petite que la taille d'une structure en début de bloc libre, on alloue au moins 16
-		size = sizeof(struct fb);
+	if(size < sizeof(struct fb)-sizeof(struct bb)){ // Si la taille allouée est plus petite que la taille d'une structure en début de bloc libre, on alloue au moins 16
+		size = sizeof(struct fb)-sizeof(struct bb);
 	}
 	// On caste le "début de la mémoire" en pointeur de pointeur de structure fb
 	struct fb** debut = (struct fb **) mem_heap;
