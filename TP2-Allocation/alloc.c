@@ -48,6 +48,7 @@ void mem_init(){
  * la chaine des espaces libres en conséquence
  */
  void allouer(size_t size, char* zone, struct fb* courant, struct fb* precedent){
+	
 	// Placer la structure bb de début de zone
 	struct bb p_bloc_plein;
 	p_bloc_plein.size = size + sizeof(struct bb);
@@ -92,6 +93,9 @@ void mem_init(){
  * Ici on implémente la méthode du First Fit
  */
 void *mem_alloc(size_t size){
+	if(size < sizeof(struct fb)){ // Si la taille allouée est plus petite que la taille d'une structure en début de bloc libre, on alloue au moins 16
+		size = sizeof(struct fb);
+	}
 	// On caste le "début de la mémoire" en pointeur de pointeur de structure fb
 	struct fb** debut = (struct fb **) mem_heap;
 	struct fb* courant; // Pour avancer dans la file

@@ -212,6 +212,7 @@ void init()
 	/* initialisation de la table des infos : */
 	for (i=0; i < NB_MAX_ALLOC; i++) {
 		(bloc_info_table[i]).id = 0;
+		(bloc_info_table[i]).address = NULL;
 	}
 
 	printf("\n");
