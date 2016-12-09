@@ -69,7 +69,7 @@ int main() {
 		l = readcmd();
 
 		// Terminaison du shell
-		if(strcmp(l->seq[0][0], "exit") == 0) {
+		if(l->seq[0]!=NULL && strcmp(l->seq[0][0], "exit") == 0) {
 			exit(0);
 		}
 
@@ -93,7 +93,7 @@ int main() {
 				}
 				
 				// Le Pipe //
-				for (i=0; l->seq[i]!=0; i++) {
+				for (i=0; l->seq[i]!=NULL; i++) {
 					
 					int p[2];
 					if(pipe(p) < 0) {
