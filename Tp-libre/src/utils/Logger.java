@@ -46,6 +46,10 @@ public class Logger {
         if(debug>=1)System.out.format("[LOG:%3d|%s] <%s:%2d> production   : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), PROD_IDENTIFIER, p.identification(), m.toString(), buffer);
     }
     
+    public void productionLogger(_Producteur p, Message m, int buffer, int nb_exemplaires) {
+        if(debug>=1)System.out.format("[LOG:%3d|%s] <%s:%2d> production   : (%s) buffer:%d en %d exemplaires%n", currentId(), dateFormat.format(LocalDateTime.now()), PROD_IDENTIFIER, p.identification(), m.toString(), buffer,nb_exemplaires);
+    }
+    
     public void consommationLogger(_Consommateur c, Message m, int buffer) {
         if(debug>=1)System.out.format("[LOG:%3d|%s] <%s:%2d> consommation : (%s) buffer:%d%n", currentId(), dateFormat.format(LocalDateTime.now()), CONS_IDENTIFIER, c.identification(), m.toString(), buffer);
     }
@@ -56,6 +60,22 @@ public class Logger {
     
     public void infoLogger(String message) {
         if(debug>=1)System.out.format("[LOG:%3d|%s] <%s> %s%n", currentId(), dateFormat.format(LocalDateTime.now()), INFO_IDENTIFIER, message);
+    }
+    
+    public void semaphoreinitLogger(String message) {
+        if(debug>=2)System.out.println("[Semaphore][Init] "+message);
+    }
+    
+    public void semaphorePLogger(String message) {
+        if(debug>=2)System.out.println("[Semaphore][P] "+message);
+    }
+    
+    public void semaphoreVLogger(String message) {
+        if(debug>=2)System.out.println("[Semaphore][V] "+message);
+    }
+    
+    public void messageRetirerLogger(String message) {
+        if(debug==3) System.out.println("[MessageX][retirer] " + message);
     }
     
     public void setDebug(int debug){

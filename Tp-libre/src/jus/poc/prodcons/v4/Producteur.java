@@ -62,8 +62,10 @@ public class Producteur extends Acteur implements _Producteur {
                 deposer();
                 synchronized (this){
                 while(!(((MessageX)m).pret())){
+                    System.out.println("jus.poc.prodcons.v4.Producteur.run() ! attends");
                     wait();
                 }
+                    System.out.println("jus.poc.prodcons.v4.Producteur.run() ! REVEIL");
             }
                                 
             } catch (Exception ex) {

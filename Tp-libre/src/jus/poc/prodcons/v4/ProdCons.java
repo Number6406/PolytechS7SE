@@ -48,15 +48,18 @@ public class ProdCons implements Tampon {
         sem_prod.P();
         synchronized(this) {
             
-            Logger.getInstance().productionLogger(p, msg, tete_production);
+            Logger.getInstance().productionLogger(p, msg, tete_production,((MessageX)msg).getNbExemplaires());
             
             //ajout dans le buffer
             tampon[tete_production] = msg;
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++;            
         }
-        sem_cons.V();
+        for(int i = 0; i < ((MessageX)msg).getNbExemplaires(); i++){
+            sem_cons.V();
+        }
         
+                
     }
 
     @Override
@@ -64,12 +67,14 @@ public class ProdCons implements Tampon {
         Message m;
             
         sem_cons.P();
-        synchronized(this) {
-            m = tampon[tete_consommation];
+            m = ((MessageX)tampon[tete_consommation]).retirer();
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
-            tete_consommation = (tete_consommation+1)%taille();
-
-            nb_messages_tampon--;           
+        synchronized(this) {
+            if(!(((MessageX)m).estConsomme())){    
+                tete_consommation = (tete_consommation+1)%taille();
+                nb_messages_tampon--;   
+                ((MessageX)m).setConsomme(true);
+            }
         }
         sem_prod.V();
         

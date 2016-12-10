@@ -123,7 +123,8 @@ public class TestProdCons extends Simulateur {
         nombreMoyenNbExemplaire = Integer.parseInt(option.getProperty("nombreMoyenNbExemplaire"));
         deviationNombreMoyenNbExemplaire = Integer.parseInt(option.getProperty("deviationNombreMoyenNbExemplaire"));
         
-        Logger.getInstance().setDebug(debug);
+        // @TODO
+        Logger.getInstance().setDebug(3);
     }
     
 }
