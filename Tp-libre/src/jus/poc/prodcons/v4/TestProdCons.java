@@ -41,7 +41,7 @@ public class TestProdCons extends Simulateur {
 
     @Override
     protected void run() throws Exception {
-        init("option2.xml");
+        init("option3.xml");
         
         prodCons = new ProdCons(nbBuffer);
         producteurs = new Producteur[nbProd];

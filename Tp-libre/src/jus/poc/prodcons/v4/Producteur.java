@@ -60,7 +60,12 @@ public class Producteur extends Acteur implements _Producteur {
                 
                 produire();
                 deposer();
-                
+                synchronized (this){
+                while(!(((MessageX)m).pret())){
+                    wait();
+                }
+            }
+                                
             } catch (Exception ex) {
                 System.err.println(ex);
             }
