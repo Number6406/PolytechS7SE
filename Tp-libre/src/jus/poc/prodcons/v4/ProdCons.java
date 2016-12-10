@@ -22,6 +22,7 @@ public class ProdCons implements Tampon {
     
     DateTimeFormatter dateFormat;
     private Message[] tampon;
+    private int[] nb_conso;
     
     private static MonSemaphore sem_prod;
     private static MonSemaphore sem_cons;
@@ -33,6 +34,7 @@ public class ProdCons implements Tampon {
     public ProdCons(int taille_tampon) {
         dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
+        nb_conso = new int[taille_tampon];
         
         sem_prod = new MonSemaphore(taille_tampon);
         sem_cons = new MonSemaphore(0);
@@ -67,11 +69,18 @@ public class ProdCons implements Tampon {
         Message m;
             
         sem_cons.P();
+        synchronized(this){ // Assure qu'il y a le bon nombre de consommateur
+            if(nb_conso[tete_consommation]>=((MessageX)tampon[tete_consommation]).getNbExemplaires()){
+                nb_conso[tete_consommation]=0;
+                tete_consommation = (tete_consommation+1)%taille();
+            }
+            nb_conso[tete_consommation]++;
+        }
             m = ((MessageX)tampon[tete_consommation]).retirer();
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
         synchronized(this) {
             if(!(((MessageX)m).estConsomme())){    
-                tete_consommation = (tete_consommation+1)%taille();
+                //tete_consommation = (tete_consommation+1)%taille();
                 nb_messages_tampon--;   
                 ((MessageX)m).setConsomme(true);
             }
