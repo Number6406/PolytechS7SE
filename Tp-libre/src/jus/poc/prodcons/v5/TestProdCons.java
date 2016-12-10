@@ -1,6 +1,7 @@
-package jus.poc.prodcons.v4;
+package jus.poc.prodcons.v5;
 
 
+import jus.poc.prodcons.v3.*;
 import java.io.IOException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
@@ -41,7 +42,7 @@ public class TestProdCons extends Simulateur {
 
     @Override
     protected void run() throws Exception {
-        init("option3.xml");
+        init("option2.xml");
         
         prodCons = new ProdCons(nbBuffer);
         producteurs = new Producteur[nbProd];
@@ -50,7 +51,7 @@ public class TestProdCons extends Simulateur {
         observateur.init(nbProd, nbCons, nbBuffer);
         
         for(int pi = 0; pi < nbProd; pi ++) {
-            producteurs[pi] = new Producteur(prodCons, observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction, nombreMoyenNbExemplaire, deviationNombreMoyenNbExemplaire);
+            producteurs[pi] = new Producteur(prodCons, observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction);
             observateur.newProducteur(producteurs[pi]);
             producteurs[pi].start();
         }
@@ -123,7 +124,6 @@ public class TestProdCons extends Simulateur {
         nombreMoyenNbExemplaire = Integer.parseInt(option.getProperty("nombreMoyenNbExemplaire"));
         deviationNombreMoyenNbExemplaire = Integer.parseInt(option.getProperty("deviationNombreMoyenNbExemplaire"));
         
-        // @TODO
         Logger.getInstance().setDebug(debug);
     }
     

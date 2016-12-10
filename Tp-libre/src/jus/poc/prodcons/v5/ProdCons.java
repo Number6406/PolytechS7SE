@@ -1,5 +1,6 @@
-package jus.poc.prodcons.v4;
+package jus.poc.prodcons.v5;
 
+import jus.poc.prodcons.v3.*;
 import java.time.format.DateTimeFormatter;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
@@ -22,7 +23,6 @@ public class ProdCons implements Tampon {
     
     DateTimeFormatter dateFormat;
     private Message[] tampon;
-    private int[] nb_conso;
     
     private static MonSemaphore sem_prod;
     private static MonSemaphore sem_cons;
@@ -34,7 +34,6 @@ public class ProdCons implements Tampon {
     public ProdCons(int taille_tampon) {
         dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
-        nb_conso = new int[taille_tampon];
         
         sem_prod = new MonSemaphore(taille_tampon);
         sem_cons = new MonSemaphore(0);
@@ -50,18 +49,15 @@ public class ProdCons implements Tampon {
         sem_prod.P();
         synchronized(this) {
             
-            Logger.getInstance().productionLogger(p, msg, tete_production,((MessageX)msg).getNbExemplaires());
+            Logger.getInstance().productionLogger(p, msg, tete_production);
             
             //ajout dans le buffer
             tampon[tete_production] = msg;
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++;            
         }
-        for(int i = 0; i < ((MessageX)msg).getNbExemplaires(); i++){
-            sem_cons.V();
-        }
+        sem_cons.V();
         
-                
     }
 
     @Override
@@ -69,20 +65,12 @@ public class ProdCons implements Tampon {
         Message m;
             
         sem_cons.P();
-        synchronized(this){ // Assure qu'il y a le bon nombre de consommateur
-            if(nb_conso[tete_consommation]>=((MessageX)tampon[tete_consommation]).getNbExemplaires()){
-                nb_conso[tete_consommation]=0;
-                tete_consommation = (tete_consommation+1)%taille();
-            }
-            nb_conso[tete_consommation]++;
-        }
-            m = ((MessageX)tampon[tete_consommation]).retirer();
-            Logger.getInstance().consommationLogger(c, m,tete_consommation);
         synchronized(this) {
-            if(!(((MessageX)m).estConsomme())){    
-                nb_messages_tampon--;   
-                ((MessageX)m).setConsomme(true);
-            }
+            m = tampon[tete_consommation];
+            Logger.getInstance().consommationLogger(c, m,tete_consommation);
+            tete_consommation = (tete_consommation+1)%taille();
+
+            nb_messages_tampon--;           
         }
         sem_prod.V();
         

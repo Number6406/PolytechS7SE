@@ -75,7 +75,11 @@ public class Logger {
     }
     
     public void messageRetirerLogger(String message) {
-        if(debug==3) System.out.println("[MessageX][retirer] " + message);
+        if(debug>=3)System.out.println("[MessageX][retirer] " + message);
+    }
+    
+    public void autreLogger(String message){
+        if(debug >=4)System.out.println("[AUTRE] "+ message);
     }
     
     public void setDebug(int debug){
