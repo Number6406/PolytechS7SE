@@ -34,6 +34,12 @@ public class MessageX implements Message {
         return nb_consommateurs >= nb_exemplaires;
     }
     
+    public synchronized void attendre() throws InterruptedException{
+        while(!pret()){
+            wait();
+        }
+    }
+    
     public synchronized MessageX retirer() throws InterruptedException{
         nb_consommateurs++;
         Logger.getInstance().messageRetirerLogger("consommateur n° " + nb_consommateurs);
