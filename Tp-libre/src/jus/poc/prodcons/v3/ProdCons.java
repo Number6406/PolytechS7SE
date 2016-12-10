@@ -5,7 +5,7 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
-import jus.poc.prodcons.v2.MonSemaphore;
+import utils.MonSemaphore;
 import utils.Logger;
 
 /*
