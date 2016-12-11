@@ -1,7 +1,6 @@
 package jus.poc.prodcons.v6;
 
 
-import jus.poc.prodcons.v3.*;
 import java.io.IOException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;

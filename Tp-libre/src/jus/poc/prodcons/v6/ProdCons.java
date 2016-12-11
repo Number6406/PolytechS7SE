@@ -1,6 +1,5 @@
 package jus.poc.prodcons.v6;
 
-import jus.poc.prodcons.v3.*;
 import java.time.format.DateTimeFormatter;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;

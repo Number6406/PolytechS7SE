@@ -1,7 +1,6 @@
 package jus.poc.prodcons.v6;
 
 
-import jus.poc.prodcons.v3.*;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons._Producteur;
