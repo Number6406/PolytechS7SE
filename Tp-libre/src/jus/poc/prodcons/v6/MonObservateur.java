@@ -42,13 +42,13 @@ public class MonObservateur {
     }
     
     public void conforme() {   
-        if(producteurs.size() > nbProd) {
+        if(producteurs.size() != nbProd) {
             if(!errors.contains("Le nombre de producteurs n'est pas conforme.")) {
                 errors.add("Le nombre de producteurs n'est pas conforme.");            
             }
         }
         
-        if(consommateurs.size() > nbCons) {
+        if(consommateurs.size() != nbCons) {
             if(!errors.contains("Le nombre de consommateurs n'est pas conforme.")) {
                 errors.add("Le nombre de consommateurs n'est pas conforme.");
             }
@@ -73,6 +73,9 @@ public class MonObservateur {
         if(a_deposer.contains(m)) {
             a_deposer.remove(m);
             messages.add(m);
+            if(a_deposer.size() > nbBuffers) {
+                errors.add("Dépassement de la taille du buffer.");
+            }
         } else {
             errors.add("jus.poc.prodcons.v6.MonObservateur.depotMessage() : message non produit");
         }
@@ -89,7 +92,7 @@ public class MonObservateur {
     
     public void consommationMessage(Consommateur c, Message m){
         if(a_traiter.contains(m)){
-        a_traiter.remove(m);
+            a_traiter.remove(m);
         } else {
             errors.add("jus.poc.prodcons.v6.MonObservateur.traitementMessage() : message pas traitable");
         }
