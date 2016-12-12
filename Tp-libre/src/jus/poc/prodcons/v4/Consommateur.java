@@ -20,7 +20,7 @@ import jus.poc.prodcons._Consommateur;
  * @author bonhourg
  */
 public class Consommateur extends Acteur implements _Consommateur {
-
+    
     private ProdCons tampon;
     private int nb_messages;
     private Message message;

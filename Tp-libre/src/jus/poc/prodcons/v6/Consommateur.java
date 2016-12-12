@@ -20,22 +20,25 @@ import jus.poc.prodcons._Consommateur;
  * @author bonhourg
  */
 public class Consommateur extends Acteur implements _Consommateur {
-
+    
+    private MonObservateur mon_observateur;
     private ProdCons tampon;
     private int nb_messages;
     private Message message;
     private int tpsTraitement;
     private boolean enTraitement = false;
     
-    public Consommateur(ProdCons tampon, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException {
+    public Consommateur(ProdCons tampon, Observateur observateur, MonObservateur mon_observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException {
         super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
         this.tampon = tampon;
         this.nb_messages = 0;
+        this.mon_observateur = mon_observateur;
     }
     
     public void retirer() throws InterruptedException, Exception {
         message = tampon.get(this);
         observateur.retraitMessage(this, message);
+        mon_observateur.retraitMessage(this, message);
         nb_messages++;
     }
 
@@ -44,6 +47,7 @@ public class Consommateur extends Acteur implements _Consommateur {
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement);
         observateur.consommationMessage(this, message, tpsTraitement);
+        mon_observateur.traitementMessage(this, message);
         Logger.getInstance().traitementLogger(this, message, tpsTraitement);
         enTraitement = false;
     }
