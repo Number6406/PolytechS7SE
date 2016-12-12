@@ -84,7 +84,9 @@ public class TestProdCons extends Simulateur {
         }
         
         Logger.getInstance().infoLogger("Fin de la consommation (et du programme)");
-        
+        if(observateur.coherent()) {
+            Logger.getInstance().infoLogger("Exécution correcte.");
+        }
     }
     
     public static void main(String[] args){
