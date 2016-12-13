@@ -65,7 +65,8 @@ public class MonObservateur {
         this.consommateurs.add(c);
     }
     
-    public void productionMessage(Producteur p, Message m) {
+    public void productionMessage(Producteur p, Message m, int tmp) {
+        // nous n'avons pas vérifié le temps de traitement
         a_deposer.add(m);
     }
     
@@ -73,11 +74,11 @@ public class MonObservateur {
         if(a_deposer.contains(m)) {
             a_deposer.remove(m);
             messages.add(m);
-            if(a_deposer.size() > nbBuffers) {
+            if(messages.size() > nbBuffers) {
                 errors.add("Dépassement de la taille du buffer.");
             }
         } else {
-            errors.add("jus.poc.prodcons.v6.MonObservateur.depotMessage() : message non produit");
+            errors.add("jus.poc.prodcons.v6.MonObservateur.depotMessage() : message non produit ["+m+"]");
         }
     }
     
@@ -86,7 +87,7 @@ public class MonObservateur {
             messages.remove(m);
             a_traiter.add(m);
         } else {
-            errors.add("jus.poc.prodcons.v6.MonObservateur.retraitMessage() : pas le bon ordre");
+            errors.add("jus.poc.prodcons.v6.MonObservateur.retraitMessage() : pas le bon ordre ["+m+"]");
         }
     }
     
@@ -94,12 +95,18 @@ public class MonObservateur {
         if(a_traiter.contains(m)){
             a_traiter.remove(m);
         } else {
-            errors.add("jus.poc.prodcons.v6.MonObservateur.traitementMessage() : message pas traitable");
+            errors.add("jus.poc.prodcons.v6.MonObservateur.traitementMessage() : message pas traitable ["+m+"]");
         }
     }
     
     public boolean coherent(){
         conforme();
         return a_deposer.isEmpty() && messages.isEmpty() && a_traiter.isEmpty() && (errors.size() == 0);
+    }
+
+    public void listErrors() {
+        for (String error : errors) {
+            System.err.println(error);
+        }
     }
 }
