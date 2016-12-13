@@ -1,6 +1,5 @@
 package jus.poc.prodcons.v3;
 
-import java.time.format.DateTimeFormatter;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -20,7 +19,6 @@ import utils.Logger;
  */
 public class ProdCons implements Tampon {
     
-    DateTimeFormatter dateFormat;
     private Message[] tampon;
     
     private static MonSemaphore sem_prod;
@@ -31,7 +29,6 @@ public class ProdCons implements Tampon {
     private int nb_messages_tampon;
     
     public ProdCons(int taille_tampon) {
-        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         
         sem_prod = new MonSemaphore(taille_tampon);
@@ -45,7 +42,7 @@ public class ProdCons implements Tampon {
     @Override
     public void put(_Producteur p, Message msg) throws Exception, InterruptedException {
         
-        sem_prod.P();
+        sem_prod.P(); // consommation d'une ressource en écriture
         synchronized(this) {
             
             Logger.getInstance().productionLogger(p, msg, tete_production);
@@ -55,7 +52,7 @@ public class ProdCons implements Tampon {
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++;            
         }
-        sem_cons.V();
+        sem_cons.V(); // libération d'une ressources en lecture (pour la consommation du message créé)
         
     }
 
@@ -63,7 +60,7 @@ public class ProdCons implements Tampon {
     public Message get(_Consommateur c) throws Exception, InterruptedException {
         Message m;
             
-        sem_cons.P();
+        sem_cons.P(); // consommation en lecture
         synchronized(this) {
             m = tampon[tete_consommation];
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
@@ -71,7 +68,7 @@ public class ProdCons implements Tampon {
 
             nb_messages_tampon--;           
         }
-        sem_prod.V();
+        sem_prod.V(); // libération en écriture (buffer vidé de 1 message)
         
         return m;
     }

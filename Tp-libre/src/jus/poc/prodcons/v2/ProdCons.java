@@ -1,9 +1,6 @@
 package jus.poc.prodcons.v2;
 
 import utils.MonSemaphore;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.Semaphore;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -22,7 +19,6 @@ import utils.Logger;
  */
 public class ProdCons implements Tampon {
     
-    DateTimeFormatter dateFormat;
     private Message[] tampon;
     
     private static MonSemaphore sem_prod;
@@ -33,11 +29,11 @@ public class ProdCons implements Tampon {
     private int nb_messages_tampon;
     
     public ProdCons(int taille_tampon) {
-        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         
-        sem_prod = new MonSemaphore(taille_tampon);
-        sem_cons = new MonSemaphore(0);
+        // déclaration de deux sémaphores :
+        sem_prod = new MonSemaphore(taille_tampon); // l'un pour l'écriture, du dispose donc de base du nombre de ressources en fonction de la taille du buffer
+        sem_cons = new MonSemaphore(0); // l'autre à 0 pour la lecture, car aucun message n'est encore présent dans le buffer
         
         tete_production = 0;
         tete_consommation = 0;
@@ -47,8 +43,8 @@ public class ProdCons implements Tampon {
     @Override
     public void put(_Producteur p, Message msg) throws Exception, InterruptedException {
         
-        sem_prod.P();
-        synchronized(this) {
+        sem_prod.P(); // prise de ressource dans le sémaphore de d'écriture pour informer qu'une place n'est plus disponible
+        synchronized(this) { // mise en place d'un bloc synchronized pour éviter les opérations sur la même case du buffer.
             
             Logger.getInstance().productionLogger(p, msg, tete_production);
             
@@ -57,7 +53,7 @@ public class ProdCons implements Tampon {
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++;            
         }
-        sem_cons.V();
+        sem_cons.V(); // libération d'une ressource du sémaphore lecture, pour informer qu'un message est dans le buffer
         
     }
 
@@ -65,15 +61,15 @@ public class ProdCons implements Tampon {
     public Message get(_Consommateur c) throws Exception, InterruptedException {
         Message m;
             
-        sem_cons.P();
-        synchronized(this) {
+        sem_cons.P(); // allocation de ressource en lecture pour récupérer un message dans le buffer
+        synchronized(this) { // encore une sync pour éviter les erreurs 
             m = tampon[tete_consommation];
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
             tete_consommation = (tete_consommation+1)%taille();
 
             nb_messages_tampon--;           
         }
-        sem_prod.V();
+        sem_prod.V(); // libération de ressource en production car le message n'est plus présent dans le buffer
         
         return m;
     }

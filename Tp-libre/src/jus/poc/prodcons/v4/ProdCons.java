@@ -1,6 +1,5 @@
 package jus.poc.prodcons.v4;
 
-import java.time.format.DateTimeFormatter;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -20,7 +19,6 @@ import utils.Logger;
  */
 public class ProdCons implements Tampon {
     
-    DateTimeFormatter dateFormat;
     private Message[] tampon;
     private int[] nb_conso;
     
@@ -32,7 +30,6 @@ public class ProdCons implements Tampon {
     private int nb_messages_tampon;
     
     public ProdCons(int taille_tampon) {
-        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         nb_conso = new int[taille_tampon];
         
@@ -57,7 +54,7 @@ public class ProdCons implements Tampon {
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++;            
         }
-        for(int i = 0; i < ((MessageX)msg).getNbExemplaires(); i++){
+        for(int i = 0; i < ((MessageX)msg).getNbExemplaires(); i++){ // libération en lecture pour permettre à tous les exemplaires d'être consommés
             sem_cons.V();
         }
         
@@ -70,13 +67,13 @@ public class ProdCons implements Tampon {
             
         sem_cons.P();
         synchronized(this){ // Assure qu'il y a le bon nombre de consommateur
-            if(nb_conso[tete_consommation]>=((MessageX)tampon[tete_consommation]).getNbExemplaires()){
+            if(nb_conso[tete_consommation]>=((MessageX)tampon[tete_consommation]).getNbExemplaires()){ // vérification de si tous les exemplaires sont consommés par des consommateurs diférents.
                 nb_conso[tete_consommation]=0;
-                tete_consommation = (tete_consommation+1)%taille();
+                tete_consommation = (tete_consommation+1)%taille(); // dans ce cas, on passe la tête de lecture au message suivant
             }
             nb_conso[tete_consommation]++;
         }
-            m = ((MessageX)tampon[tete_consommation]).retirer();
+            m = ((MessageX)tampon[tete_consommation]).retirer(); // on retire un exemplaire du message
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
         synchronized(this) {
             if(!(((MessageX)m).estConsomme())){    

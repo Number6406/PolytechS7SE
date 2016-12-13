@@ -1,7 +1,5 @@
 package jus.poc.prodcons.v5;
 
-import jus.poc.prodcons.v3.*;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,7 +7,6 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
-import utils.MonSemaphore;
 import utils.Logger;
 
 /*
@@ -24,7 +21,6 @@ import utils.Logger;
  */
 public class ProdCons implements Tampon {
     
-    DateTimeFormatter dateFormat;
     private Message[] tampon;
     
     private final Lock lock;
@@ -36,7 +32,6 @@ public class ProdCons implements Tampon {
     private int nb_messages_tampon;
     
     public ProdCons(int taille_tampon) {
-        dateFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         tampon = new Message[taille_tampon];
         
         this.lock = new ReentrantLock();
@@ -50,19 +45,19 @@ public class ProdCons implements Tampon {
     
     @Override
     public void put(_Producteur p, Message msg) throws Exception, InterruptedException {
-        lock.lock();
+        lock.lock(); // on verouille l'accès au buffer afin d'assurer l'ordre d'écriture des producteurs
         try{
             while(nb_messages_tampon == taille()){
-                nonPlein.await();
+                nonPlein.await(); // on met le thread en attente, sans perdre la main, car le buffer est plein
             }
             //ajout dans le buffer
             tampon[tete_production] = msg;
             tete_production = (tete_production+1)%taille();
             nb_messages_tampon++; 
             Logger.getInstance().productionLogger(p, msg, tete_production);
-            nonVide.signal();
+            nonVide.signal(); // signalement pour les consommateur : reprise de tirage
         } finally {
-            lock.unlock();
+            lock.unlock(); // on déverouille pour permettre au producteur suivant de prendre son tour
         }    
     }
 
@@ -70,19 +65,19 @@ public class ProdCons implements Tampon {
     public Message get(_Consommateur c) throws Exception, InterruptedException {
         Message m;
         
-        lock.lock();
+        lock.lock(); // on verouille à nouveau, pour le consommateur cette fois.
         try{
             while(nb_messages_tampon==0){
-                nonVide.await();
+                nonVide.await(); // si le tampon est vide, on met en attente (sans passer son tour, bien entendu)
             }
             // Recupérer
             m = tampon[tete_consommation];
             tete_consommation = (tete_consommation+1)%taille();
             nb_messages_tampon--; 
             Logger.getInstance().consommationLogger(c, m,tete_consommation);
-            nonPlein.signal();
+            nonPlein.signal(); // signalement pour les producteurs pour la reprise de dépot
         } finally {
-            lock.unlock();
+            lock.unlock(); // on deverouille à nouveau pour laisser le consommateur suivant prendre son tour
         }        
         return m;
     }
