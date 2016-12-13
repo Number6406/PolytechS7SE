@@ -87,8 +87,9 @@ public class TestProdCons extends Simulateur {
         }
         
         Logger.getInstance().infoLogger("Fin de la consommation (et du programme)");
-        System.out.println("jus.poc.prodcons.v6.TestProdCons.run() : mon observateur peut finir : " + mon_observateur.peutFinir());
-        
+        if(observateur.coherent()) {
+            Logger.getInstance().infoLogger("Exécution correcte.");
+        }
     }
     
     public static void main(String[] args){

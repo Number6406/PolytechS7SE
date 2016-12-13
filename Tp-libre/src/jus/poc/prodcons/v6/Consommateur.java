@@ -47,7 +47,7 @@ public class Consommateur extends Acteur implements _Consommateur {
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
         Thread.sleep(tpsTraitement*1000); // Pour être en secondes
         observateur.consommationMessage(this, message, tpsTraitement);
-        mon_observateur.traitementMessage(this, message);
+        mon_observateur.consommationMessage(this, message);
         Logger.getInstance().traitementLogger(this, message, tpsTraitement);
         enTraitement = false;
     }

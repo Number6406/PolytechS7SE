@@ -51,7 +51,7 @@ public class Producteur extends Acteur implements _Producteur {
     public void deposer() throws InterruptedException, Exception{
         tampon.put(this, m);
         observateur.depotMessage(this, m);
-        mon_observateur.deposeMessage(this, m);
+        mon_observateur.depotMessage(this, m);
         nb_messages--;
     }
     
