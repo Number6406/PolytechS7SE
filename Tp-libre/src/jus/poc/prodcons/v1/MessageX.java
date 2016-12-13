@@ -18,6 +18,11 @@ public class MessageX implements Message {
     private String message = "";
     private int numero;
     
+    /**
+     * Constructeur pour la classe MessageX
+     * @param a un acteur (pour récupérer son identifiant unique)
+     * @param num numéro du message
+     */
     public MessageX(Acteur a,int num){
         numero = num;
         message = "prod:"+a.identification()+"|id:"+num;
