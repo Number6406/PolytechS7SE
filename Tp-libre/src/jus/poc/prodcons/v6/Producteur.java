@@ -21,18 +21,20 @@ import jus.poc.prodcons.v1.MessageX;
  */
 public class Producteur extends Acteur implements _Producteur {
     
+    private MonObservateur mon_observateur;
     private final ProdCons tampon;
     private int nb_messages;
     private final int[] tpsTraitement;
     private Message m;
     private int numero_de_message;
     
-    public Producteur(ProdCons tampon,Observateur obs, int nombreMoyenDeProduction, int deviationNombreMoyenDeProduction, int tempsMoyenProduction, int deviationTempsMoyenProduction) throws ControlException{
+    public Producteur(ProdCons tampon,Observateur obs, MonObservateur mon_observateur, int nombreMoyenDeProduction, int deviationNombreMoyenDeProduction, int tempsMoyenProduction, int deviationTempsMoyenProduction) throws ControlException{
         super(Acteur.typeProducteur,obs,tempsMoyenProduction,deviationTempsMoyenProduction);
         this.tampon = tampon;
         nb_messages = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreMoyenDeProduction);
         this.tpsTraitement = Aleatoire.valeurs(nb_messages, tempsMoyenProduction, deviationTempsMoyenProduction);
         numero_de_message = 0;
+        this.mon_observateur = mon_observateur;
     }
     
     /**
@@ -49,6 +51,7 @@ public class Producteur extends Acteur implements _Producteur {
     public void deposer() throws InterruptedException, Exception{
         tampon.put(this, m);
         observateur.depotMessage(this, m);
+        mon_observateur.deposeMessage(this, m);
         nb_messages--;
     }
     

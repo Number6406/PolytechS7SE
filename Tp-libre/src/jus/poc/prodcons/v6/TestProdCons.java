@@ -34,9 +34,12 @@ public class TestProdCons extends Simulateur {
     protected static ProdCons prodCons;
     protected static Producteur[] producteurs;
     protected static Consommateur[] consommateurs;
+    
+    protected MonObservateur mon_observateur;
 
     public TestProdCons(Observateur observateur) {
         super(observateur);
+        mon_observateur = new MonObservateur();
     }
 
     @Override
@@ -50,13 +53,13 @@ public class TestProdCons extends Simulateur {
         observateur.init(nbProd, nbCons, nbBuffer);
         
         for(int pi = 0; pi < nbProd; pi ++) {
-            producteurs[pi] = new Producteur(prodCons, observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction);
+            producteurs[pi] = new Producteur(prodCons, observateur, mon_observateur, nombreMoyenDeProduction, deviationNombreMoyenDeProduction, tempsMoyenProduction, deviationTempsMoyenProduction);
             observateur.newProducteur(producteurs[pi]);
             producteurs[pi].start();
         }
         
         for(int ci = 0; ci < nbCons; ci++) {
-            consommateurs[ci] = new Consommateur(prodCons, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation);
+            consommateurs[ci] = new Consommateur(prodCons, observateur, mon_observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation);
             observateur.newConsommateur(consommateurs[ci]);
             consommateurs[ci].start();
         }
@@ -84,9 +87,14 @@ public class TestProdCons extends Simulateur {
         }
         
         Logger.getInstance().infoLogger("Fin de la consommation (et du programme)");
+<<<<<<< HEAD
         if(observateur.coherent()) {
             Logger.getInstance().infoLogger("Exécution correcte.");
         }
+=======
+        System.out.println("jus.poc.prodcons.v6.TestProdCons.run() : mon observateur peut finir : " + mon_observateur.peutFinir());
+        
+>>>>>>> ee7a0f727cff238f6d0d0aecd55ef88ac02cc431
     }
     
     public static void main(String[] args){

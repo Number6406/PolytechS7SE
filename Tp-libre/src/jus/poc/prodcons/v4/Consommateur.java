@@ -20,7 +20,7 @@ import jus.poc.prodcons._Consommateur;
  * @author bonhourg
  */
 public class Consommateur extends Acteur implements _Consommateur {
-
+    
     private ProdCons tampon;
     private int nb_messages;
     private Message message;
@@ -42,7 +42,7 @@ public class Consommateur extends Acteur implements _Consommateur {
     public void consommer() throws InterruptedException, ControlException {
         enTraitement = true;
         tpsTraitement = Aleatoire.valeur(moyenneTempsDeTraitement(), deviationTempsDeTraitement());
-        Thread.sleep(tpsTraitement);
+        Thread.sleep(tpsTraitement*1000); // Pour être en secondes
         observateur.consommationMessage(this, message, tpsTraitement);
         Logger.getInstance().traitementLogger(this, message, tpsTraitement);
         enTraitement = false;
