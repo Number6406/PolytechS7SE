@@ -62,6 +62,7 @@ public class Producteur extends Acteur implements _Producteur {
         Thread.sleep(tpsTraitement[nb_messages-1]*1000);
         m = new MessageX(this,numero_de_message++);
         observateur.productionMessage(this, m, tpsTraitement[nb_messages-1]);
+        mon_observateur.productionMessage(this, m, tpsTraitement[nb_messages-1]);
     }
     
     /**
