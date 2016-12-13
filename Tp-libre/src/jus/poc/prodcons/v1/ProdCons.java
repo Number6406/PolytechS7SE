@@ -32,6 +32,18 @@ public class ProdCons implements Tampon {
         nb_messages_tampon = 0;
     }
     
+    /**
+     * Cette méthode met en attente le thread courant tant qu'il n'y a pas de 
+     * place dans le buffer.
+     * 
+     * Il notifie à la fin pour que si il y a des consommateurs en attente
+     * ils soient réveillés.
+     * 
+     * @param p
+     * @param msg le message à déposer
+     * @throws Exception
+     * @throws InterruptedException 
+     */
     @Override
     public synchronized void put(_Producteur p, Message msg) throws Exception, InterruptedException {
         while(nb_messages_tampon >= taille()) {
@@ -47,7 +59,19 @@ public class ProdCons implements Tampon {
         
         notifyAll(); 
     }
-
+    
+    /**
+     * Cette méthode met en attente le thread courant tant qu'il n'y a pas de 
+     * messages dans le buffer.
+     * 
+     * Il notifie à la fin pour que si il y a des producteurs en attente
+     * ils soient réveillés.
+     * 
+     * @param c
+     * @return le message retiré
+     * @throws Exception
+     * @throws InterruptedException 
+     */
     @Override
     public synchronized Message get(_Consommateur c) throws Exception, InterruptedException {
 

@@ -27,6 +27,21 @@ public class Producteur extends Acteur implements _Producteur {
     private Message m;
     private int numero_de_message;
     
+    /**
+     * Constructeur pour la classe producteurs avec un nombre non connu au 
+     * préalable de messages à ecrire
+     * 
+     * les temps de traitement de chaque messages sont stockés dans un tableau
+     * de taille nb_messages
+     * 
+     * @param tampon dans lequel il va écrire
+     * @param obs
+     * @param nombreMoyenDeProduction
+     * @param deviationNombreMoyenDeProduction
+     * @param tempsMoyenProduction
+     * @param deviationTempsMoyenProduction
+     * @throws ControlException 
+     */
     public Producteur(ProdCons tampon,Observateur obs, int nombreMoyenDeProduction, int deviationNombreMoyenDeProduction, int tempsMoyenProduction, int deviationTempsMoyenProduction) throws ControlException{
         super(Acteur.typeProducteur,obs,tempsMoyenProduction,deviationTempsMoyenProduction);
         this.tampon = tampon;
@@ -36,7 +51,7 @@ public class Producteur extends Acteur implements _Producteur {
     }
     
     /**
-     *
+     * Production d'un message (en faisant dormir le thread)
      * @throws InterruptedException
      * @throws Exception
      */
@@ -46,6 +61,11 @@ public class Producteur extends Acteur implements _Producteur {
         observateur.productionMessage(this, m, tpsTraitement[nb_messages-1]);
     }
     
+    /**
+     * Dépot d'un message. L'attente est gérée dans le tampon
+     * @throws InterruptedException
+     * @throws Exception 
+     */
     public void deposer() throws InterruptedException, Exception{
         tampon.put(this, m);
         observateur.depotMessage(this, m);

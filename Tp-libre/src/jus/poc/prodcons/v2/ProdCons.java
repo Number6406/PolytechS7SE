@@ -1,9 +1,7 @@
 package jus.poc.prodcons.v2;
 
 import utils.MonSemaphore;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.Semaphore;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -44,6 +42,18 @@ public class ProdCons implements Tampon {
         nb_messages_tampon = 0;
     }
     
+    /**
+     * Cette méthode met en attente le thread courant tant qu'il n'y a pas de 
+     * place dans le buffer.
+     * 
+     * Il notifie à la fin pour que si il y a des consommateurs en attente
+     * ils soient réveillés.
+     * 
+     * @param p
+     * @param msg le message à déposer
+     * @throws Exception
+     * @throws InterruptedException 
+     */
     @Override
     public void put(_Producteur p, Message msg) throws Exception, InterruptedException {
         
@@ -61,6 +71,18 @@ public class ProdCons implements Tampon {
         
     }
 
+    /**
+     * Cette méthode met en attente le thread courant tant qu'il n'y a pas de 
+     * messages dans le buffer.
+     * 
+     * Il notifie à la fin pour que si il y a des producteurs en attente
+     * ils soient réveillés.
+     * 
+     * @param c
+     * @return le message retiré
+     * @throws Exception
+     * @throws InterruptedException 
+     */
     @Override
     public Message get(_Consommateur c) throws Exception, InterruptedException {
         Message m;
